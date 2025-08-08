@@ -47,3 +47,14 @@ body {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
+pre {
+  display: block;
+  font-family: var(--font-poppins);
+  white-space: pre-line;
+  margin: 1em 0;
+  margin-left: auto;
+}
+.box-shadow{
+  box-shadow: 1px 0 30px gray;
+}
