@@ -4,6 +4,7 @@ interface UserType {
   firstname: string;
   lastname: string;
   studentId: string;
+  email: string
 }
 
 interface AuthState {
@@ -21,6 +22,7 @@ const initialUser = {
   firstname: "Mabel",
   lastname: "Praise",
   studentId: "COH3456",
+  email: "examchuks@gmail.net"
 };
 
 export const useAuthStore = create<AuthState>((set) => ({

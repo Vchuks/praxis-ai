@@ -1,7 +1,7 @@
 "use client";
 
 // import { useAuthStore } from "@/stores";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -16,8 +16,8 @@ const Login = () => {
   };
   return (
     <div className="bg-wrapper flex items-center ">
-      <div className="w-11/12 lg:w-2/4 bg-white m-auto px-4 pt-8 pb-8 md:p-14 rounded-2xl">
-        <h2 className="w-fit py-2 bg-clip-text text-transparent bg-gradient-to-br from-[#222057]  to-[#F8991D] to-80% font-inter font-[900] text-4xl">Welcome Back!</h2>
+      <div className="w-11/12 md:w-[30rem] lg:w-[35rem] bg-white m-auto px-4 pt-8 pb-8 md:p-14 rounded-2xl">
+        <h2 className="w-fit py-2 bg-clip-text text-transparent bg-gradient-to-br from-[#222057]  to-[#F8991D] to-80% font-inter font-[900] text-2xl md:text-4xl">Welcome Back!</h2>
         <p>Login to your Praxis AI account</p>
         <form className="flex flex-col gap-4 py-7">
           <div className="flex flex-col my-2">
@@ -51,10 +51,10 @@ const Login = () => {
               <input type="checkbox" id="remember" className=" accent-[#222057] mr-2" />
               <label htmlFor="remember">Remember Me</label>
             </div>
-            <p className="font-semibold text-[#222057]">Forgot password?</p>
+            <Link  href="/forgotpassword"><p className="font-semibold text-[#222057]">Forgot password?</p></Link>
           </div>
           <Link href="/welcome">
-          <button className="bg-gradient-to-br from-[#222057] from-5% my-4 to-[#F8991D] to-90% w-full text-white font-medium py-4 rounded-lg">Login</button>
+          <button className="bg-gradient-to-br from-[#222057] from-5% my-4 to-[#F8991D] to-90% w-full text-white font-medium py-3 rounded-lg">Login</button>
           </Link>
         </form>
       </div>

@@ -19,17 +19,17 @@ const page = () => {
 
 <li><b>Day 1 of Learn Fusion 360 in 30 Days for Complete Beginners! - 2023 EDITION</b> by Product Design Online (http://www.youtube.com/watch?v=d3qGQ2utl2A) - If you're interested in 3D modeling, this video is the first in a series for learning Fusion 360.</li>`;
   return (
-    <div className="p-4 text-sm">
-      <pre className="bg-white p-4 px-6 rounded-l-[200px] rounded-br-[48px] w-3/4">
+    <div className=" md:px-4 py-6 text-sm">
+      <pre className="bg-white p-4 px-8 rounded-l-[100px] md:rounded-l-[200px] rounded-br-[50px] md:rounded-br-[200px] w-10/12 lg:w-3/4 text-sm md:text-base">
         {qst}
       </pre>
-      <div className="w-3/4 py-4 px-8">
+      <div className="w-full md:w-3/4 py-4 px-4 md:px-8">
         <div className="flex gap-2 pb-5">
           <Image src={vlogo} alt="" className="w-5" />
-          <p className="text-sm">Youtube</p>
+          <p className="text-sm">Praxis Ai</p>
           <ChevronDownIcon className="w-4" />
         </div>
-        <pre dangerouslySetInnerHTML={{ __html: ans }} />
+        <pre dangerouslySetInnerHTML={{ __html: ans }} className="text-sm md:text-base mb-5" />
       </div>
     </div>
   );
