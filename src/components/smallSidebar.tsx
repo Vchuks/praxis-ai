@@ -13,6 +13,7 @@ type AllClose = {
 const SmallSidebar: React.FC<AllClose> = ({ close }) => {
   const { user } = useAuthStore();
   return (
+    <section className="w-full bg-[#00000024] h-screen">
     <aside className="block absolute top-0 md:hidden w-[20rem] bg-white border border-[#EAEAEA] rounded-l-4xl">
       <div className="w-full bg-white p-4 rounded-tl-4xl flex justify-between items-center">
         <div className="flex items-center gap-3 ">
@@ -46,6 +47,7 @@ const SmallSidebar: React.FC<AllClose> = ({ close }) => {
         </div>
       </div>
     </aside>
+    </section>
   );
 };
 
