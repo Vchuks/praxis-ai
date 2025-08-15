@@ -15,7 +15,7 @@ const Sidebar = () => {
       <div className="md:h-[80vh] xl:max-h-[75vh] overflow-y-auto no-scrollbar">
         <UserCourse />
       </div>
-      <div className="w-full bg-white sticky bottom-0 px-4 pt-3 pb-4">
+      <div className="w-full bg-white sticky bottom-0 px-4 py-3">
         <div className="bg-gradient-to-r from-[#222057] to-[#F8991D] p-[2px] rounded-[30px]">
           <div className="bg-white w-full text-center h-12 flex justify-center items-center rounded-[30px] gap-5">
 

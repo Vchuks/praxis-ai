@@ -21,8 +21,8 @@ const SearchBox = () => {
     fileInputRef.current?.click();
   };
   return (
-    <div className="w-full md:w-[48rem] m-auto bg-gradient-to-r p-[2px] md:p-1 rounded-xl md:rounded-3xl from-[#222057] to-[#F8991D]">
-      <div className="bg-white w-full border-0 rounded-[10px] md:rounded-[20px] px-3 md:px-5 py-3">
+    <div className="w-full  xl:w-[48rem] m-auto bg-gradient-to-r p-[2px] lg:p-1 rounded-xl md:rounded-3xl from-[#222057] to-[#F8991D]">
+      <div className="bg-white w-full border-0 rounded-[10px] md:rounded-[20px] px-3 lg:px-5 py-3">
         <input
           type="search"
           name="searchAll"
@@ -60,7 +60,7 @@ const SearchBox = () => {
               className="hidden"
               accept="image/*,application/pdf,.doc,.docx"
             />
-            <div className="flex items-center gap-1 md:gap-2 text-xs md:text-base">
+            <div className="flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -77,11 +77,11 @@ const SearchBox = () => {
               </svg>
               <p>Video Research</p>
             </div>
-            <div className="flex items-center gap-1 md:gap-2 text-xs md:text-base">
+            <div className="flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base">
               <Image src={search} alt="" className="w-3 md:w-4 h-fit" />
               <p>Resources</p>
             </div>
-            <div className="flex items-center gap-1 md:gap-2 text-xs md:text-base">
+            <div className="flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base">
               <Image src={quiz} alt="" className="w-2 md:w-3 h-fit" />
 
               <p>Quiz</p>

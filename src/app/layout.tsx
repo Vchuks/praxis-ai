@@ -16,7 +16,7 @@ const poppins = Poppins({
 // });
 
 export const metadata: Metadata = {
-  title: "Veritas Ai",
+  title: "Praxis Ai",
   description: "Ai integrated to assist your learning process",
 };
 

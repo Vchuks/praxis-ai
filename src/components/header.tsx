@@ -8,13 +8,17 @@ import { useState } from "react";
 import menu from "../../public/assets/menu-icon.png";
 import logo from "../../public/assets/PluralCode-logo.png";
 import SmallSidebar from "./smallSidebar";
+import Login from "@/app/(auth)/login/page";
 
 const Header = () => {
-  const { user, logout } = useAuthStore();
-  // const { notifications } = useNotification();
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [showNav, setShowNav] = useState<boolean>(false);
 
+  const { user, logout, isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated || !user) {
+    return <Login />;
+  }
   return (
     <>
       <header className="w-full bg-white h-[5.5rem] flex justify-end items-center border-b border-[#EAEAEA] py-4 px-4 md:px-8 sticky top-0">
@@ -47,16 +51,16 @@ const Header = () => {
         </div> */}
           <div className="flex items-center gap-3 ">
             <p className="rounded-full p-2 bg-[#222057] text-sm text-white font-medium">
-              <span>{user?.firstname[0]}</span>
-              <span>{user?.lastname[0]}</span>
+              <span>{user?.student_name[0].toUpperCase()}</span>
+              <span>{user?.student_name[1].toUpperCase()}</span>
             </p>
             <div className="text-[#323232]">
               <p className="text-sm font-medium">
-                {user?.firstname} {user?.lastname}
+                {user?.student_name}
               </p>
               <p className="text-xs leading-none">
-                <span>Student ID: </span>
-                {user?.studentId}
+                <span>Student ID: {user?.student_id_number} </span>
+                
               </p>
             </div>
           </div>
