@@ -52,8 +52,8 @@ const ForgotPassword = () => {
             </h2>
             <p className="w-80">
               Please enter the four digit number that was sent to{" "}
-              {user?.email.slice(0, 4)}****@****.
-              {user?.email.slice(user?.email.length - 3)}
+              {user?.student_email.slice(0, 4)}****@****.
+              {user?.student_email.slice(user?.student_email.length - 3)}
             </p>
           </div>
           <form className="flex flex-col gap-4 py-7">
