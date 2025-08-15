@@ -25,13 +25,19 @@ const Result = () => {
 
 const [quiz, setQuiz] = useState<boolean>(false)
 const [question, setQuestion] = useState<string>(qst)
+const [answer, setAnswer] = useState<string>(ans)
 const {userAnswer} = useResultStore()
+console.log(userAnswer)
 useEffect(()=>{
 
-  if (userAnswer){
-    setQuestion(userAnswer.response_type)
+  if (!userAnswer){
+    return
+  }else {
+    return setAnswer(userAnswer.response_type)
+
   }
 },[userAnswer])
+
   return (
     <div className=" md:px-4 py-6 text-sm">
       <pre className="bg-white p-4 px-8 rounded-l-[100px] md:rounded-l-[200px] rounded-br-[50px] md:rounded-br-[200px] w-10/12 lg:w-3/4 text-sm md:text-base">
@@ -43,7 +49,7 @@ useEffect(()=>{
           <p className="text-sm">Praxis Ai</p>
           <ChevronDownIcon className="w-4" />
         </div>
-        <pre dangerouslySetInnerHTML={{ __html: ans }} className="text-sm md:text-base mb-5" />
+        <pre dangerouslySetInnerHTML={{ __html: answer }} className="text-sm md:text-base mb-5" />
       </div>}
       {quiz && <Quiz/>}
     </div>

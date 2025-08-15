@@ -89,7 +89,7 @@ const UserCourse = () => {
                           className="px-1 py-1 font-light shadow text-sm w-full flex items-start"
                         >
                           <p className="mb-2 w-full">{subT.name}</p>
-                          <div className="flex items-center w-32 gap-[2px] ">
+                          <div className="flex items-center w-32 gap-[2px] cursor-pointer ">
                           {tooltipData.map((tooltip) => (
                             <div
                               onClick={()=> setUserQuestion({course_topic: `${topics.topic}`,format: `${tooltip.desc}`})}
