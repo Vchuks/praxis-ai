@@ -31,7 +31,7 @@ body {
 }
 
 .bg-wrapper{
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   background-image: url("./../../public/assets/bg.png");
   background-size: cover;
@@ -57,4 +57,16 @@ pre {
 }
 .box-shadow{
   box-shadow: 1px 0 30px gray;
+}
+
+.snipbox {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines to display before truncation */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis; /* While -webkit-line-clamp handles the ellipsis, it's good practice to include this for clarity. */
+
+}
+.inh{
+  height: inherit;
 }

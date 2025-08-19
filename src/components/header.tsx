@@ -2,7 +2,7 @@
 // import Image from "next/image";
 // import qstmark from "../../public/assets/message-question.png";
 // import bell from "../../public/assets/notification.png";
-import { useAuthStore } from "@/stores";
+import { useAuthStore, useSmallNavStore } from "@/stores";
 import Image from "next/image";
 import { useState } from "react";
 import menu from "../../public/assets/menu-icon.png";
@@ -12,7 +12,7 @@ import Login from "@/app/(auth)/login/page";
 
 const Header = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
-  const [showNav, setShowNav] = useState<boolean>(false);
+  const {showNav, setShowNav} = useSmallNavStore()
 
   const { user, logout, isAuthenticated } = useAuthStore();
 
@@ -58,7 +58,7 @@ const Header = () => {
               <p className="text-sm font-medium">
                 {user?.student_name}
               </p>
-              <p className="text-xs leading-none">
+              <p className="text-xs leading-relaxed">
                 <span>Student ID: {user?.student_id_number} </span>
                 
               </p>
@@ -96,7 +96,7 @@ const Header = () => {
         <p className="text-xs font-light">Intro to product design</p>
       </div>
       {showNav &&
-        <SmallSidebar close={()=> setShowNav(false)}/>
+        <SmallSidebar />
         }
     </>
   );

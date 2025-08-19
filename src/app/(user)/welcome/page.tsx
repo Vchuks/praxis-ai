@@ -1,20 +1,28 @@
 "use client";
 import Image from "next/image";
 import vlogo from "../../../../public/assets/vlogo.png";
-import { useAuthStore } from "@/stores";
+import { useAuthStore, useResultStore } from "@/stores";
 import SearchBox from "@/components/searchBox";
-// import { useCoursesStore } from "@/stores/courses.store";
-// import { useEffect } from "react";
+
+
 
 const WelcomePage = () => {
   const { user, isAuthenticated } = useAuthStore()
-  // const { courses, loadCourses, loading } = useCoursesStore()
-
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     loadCourses()
-  //   }
-  // }, [isAuthenticated, loadCourses])
+  const {loading, userQuestion} = useResultStore()
+  
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F8991D]"></div>
+        <p className="text-gray-600">Loading your {userQuestion?.format}...</p>
+        {userQuestion && (
+          <p className="text-sm text-gray-500 text-center max-w-md">
+            Topic: {userQuestion.course_topic}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <div>Please log in</div>
