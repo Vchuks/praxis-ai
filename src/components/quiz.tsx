@@ -1,5 +1,4 @@
 import { useResultStore } from "@/stores";
-import { ChevronRightIcon } from "@heroicons/react/16/solid";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { Fragment, useCallback, useState } from "react";
 
@@ -11,11 +10,18 @@ type QuizDataObject = {
 type QuizDataType = {
   quizData: {
 
-    data: QuizDataObject[] ;
+    data: [] | {content: string} | QuizDataObject[] ;
   }
 };
 const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
   const { userQuestion } = useResultStore();
+  // Helper function to check if data is quiz array
+  const isQuizDataArray = (data: [] | {content: string;} | QuizDataObject[]): data is QuizDataObject[] => {
+    return Array.isArray(data) && data.length > 0 && typeof data[0] === 'object' && 'question' in data[0];
+  };
+
+  const quizArray = isQuizDataArray(quizData.data) ? quizData.data : [];
+  
   const [pageNum, setPageNum] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
 
@@ -105,12 +111,26 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
 
     return null;
   };
+  
+if (!isQuizDataArray(quizData.data)) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="bg-white border border-gray-300 rounded-lg p-6 text-center">
+          <p className="text-gray-600">
+            {typeof quizData.data === 'object' && 'content' in quizData.data
+              ? quizData.data.content
+              : 'No quiz data available. Please generate questions first.'}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto ">
       {pageNum !== 10 && (
         <p className="text-sm mb-4">
-          Below are {quizData?.data.length} questions on{" "}
+          Below are {quizArray.length} questions on{" "}
           {userQuestion?.topicName}:
         </p>
       )}
@@ -120,18 +140,18 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
         </h1>
         {pageNum !== 10 && (
           <p className="text-base md:text-[20px]">
-            Below are {quizData?.data.length} questions on{" "}
+            Below are {quizArray.length} questions on{" "}
             {userQuestion?.topicName}:{score}
           </p>
         )}
       </div>
 
       <div className="space-y-6 border font-semibold border-[#323232] border-t-0 rounded-b-[13px]">
-        {quizData?.data.map((item: QuizDataObject, questionIndex: number) => {
+        {quizArray.map((item: QuizDataObject, questionIndex: number) => {
           const hasAnswered = answeredQuestions.has(questionIndex);
           return (
             <Fragment key={`qst-${questionIndex}`}>
-              {quizData.data.indexOf(item) === pageNum ? (
+              {quizArray.indexOf(item) === pageNum ? (
                 <div
                   key={item.question}
                   className="bg-white p-3 md:p-6  shadow-sm rounded-b-[13px]"
@@ -202,12 +222,12 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
       </div>
       {pageNum === 10 ? (
         <p className="font-semibold text-2xl pt-3">
-          Total Score: {score}/{quizData?.data.length}
+          Total Score: {score}/{quizArray.length}
         </p>
       ) : null}
       <div className="mt-4 text-center">
         <p className="text-sm text-gray-500">
-          Answered: {answeredQuestions.size} / {quizData?.data.length} questions
+          Answered: {answeredQuestions.size} / {quizArray.length} questions
         </p>
       </div>
     </div>

@@ -17,6 +17,7 @@ const ResultPage = () => {
   const { userQuestion, userAnswer, loading, error } = useResultStore();
 
   const router = useRouter();
+  
 
   // Debug logging
   useEffect(() => {
