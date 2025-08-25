@@ -67,6 +67,14 @@ pre {
   text-overflow: ellipsis; /* While -webkit-line-clamp handles the ellipsis, it's good practice to include this for clarity. */
 
 }
+.hh{height: 75dvh;}
 .inh{
   height: inherit;
 }
+
+
+@media (min-width: 700px) and (max-width: 1100px) {
+  .hh{height: 82dvh;}
+}
+
+ 

@@ -6,9 +6,10 @@ import { useAuthStore, useSmallNavStore } from "@/stores";
 import Image from "next/image";
 import { useState } from "react";
 import menu from "../../public/assets/menu-icon.png";
-import logo from "../../public/assets/PluralCode-logo.png";
+import logo from "../../public/assets/praxis-logo.png";
 import SmallSidebar from "./smallSidebar";
 import Login from "@/app/(auth)/login/page";
+import Link from "next/link";
 
 const Header = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -19,9 +20,11 @@ const Header = () => {
   if (!isAuthenticated || !user) {
     return <Login />;
   }
+  const getName = user?.student_name.split(" ") 
+  
   return (
     <>
-      <header className="w-full bg-white h-[5.5rem] flex justify-end items-center border-b border-[#EAEAEA] py-4 px-4 md:px-8 sticky top-0">
+      <header className="w-full z-10 bg-white h-[5.5rem] flex justify-end items-center border-b border-[#EAEAEA] py-4 px-4 md:px-8 sticky top-0">
         {/* <div className="w-full relative">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -50,9 +53,9 @@ const Header = () => {
         <p className="rounded-full absolute -top-1 -right-1 bg-[#F82A1D] text-white text-[9px] border-2 border-white font-medium w-4 h-4 text-center">{notifications.length}</p>
         </div> */}
           <div className="flex items-center gap-3 ">
-            <p className="rounded-full p-2 bg-[#222057] text-sm text-white font-medium">
-              <span>{user?.student_name[0].toUpperCase()}</span>
-              <span>{user?.student_name[1].toUpperCase()}</span>
+            <p className="rounded-full p-2 bg-[#222057] w-9 text-center text-sm text-white font-medium">
+              <span>{getName[0].toUpperCase()[0]}</span>
+              <span>{getName[1] ? getName[1].toUpperCase()[0] : getName[0].toUpperCase()[1]}</span>
             </p>
             <div className="text-[#323232]">
               <p className="text-sm font-medium">
@@ -79,7 +82,8 @@ const Header = () => {
           </svg>
           {dropdown && (
             <ul className="absolute -bottom-24 rounded-b-md pt-1 pb-5 px-4 bg-white w-52 text-sm">
-              <li className="pt-2 cursor-pointer">Back to dashboard</li>
+        <Link href="https://pluralcode.academy/portal/dashboard.html">
+              <li className="pt-2 cursor-pointer">Back to dashboard</li></Link>
               <li className="pt-2 cursor-pointer" onClick={logout}>
                 Logout
               </li>
@@ -87,8 +91,8 @@ const Header = () => {
           )}
         </div>
         <div className="w-full flex justify-between items-center md:hidden">
-          <Image src={logo} alt="" className="w-44 h-fit " />
-          <Image src={menu} alt="" className="w-6 h-fit" onClick={()=> setShowNav(!showNav)} />
+          <Image src={logo} alt="" className="w-40 items-start " />
+          <Image src={menu} alt="" className="w-6 items-start" onClick={()=> setShowNav(!showNav)} />
         </div>
       </header>
       <div className="block md:hidden bg-[#F5F6FA] w-full text-center border-b-4 border-[#F8991D] pb-2">

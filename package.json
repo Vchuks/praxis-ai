@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "aos": "^3.0.0-beta.6",
     "lineicons": "^1.3.2",
     "next": "15.4.5",
     "react": "^18.3.1",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.0.0",
+    "@types/aos": "^3.0.7",
     "@types/node": "^20",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",

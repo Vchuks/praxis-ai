@@ -6,7 +6,7 @@ const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
   display: "swap",
-  weight: ["100","200","300","400","500","600","700","800","900"]
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 // const inter = Inter({
 //   variable: "--font-inter",
@@ -27,11 +27,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.className} antialiased`}
-      >
+      
+      <body className={`${poppins.className} antialiased`}>
         {children}
       </body>
+        
     </html>
   );
 }
+

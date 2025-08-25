@@ -26,13 +26,14 @@ const SearchBox = () => {
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
   const { setShowNav } = useSmallNavStore();
-  const { setUserQuestion } = useResultStore();
-
+  const { setUserQuestion, userQuestion } = useResultStore();
+  
+  
   const handleAnswer = useCallback(
     async (topicName: string, format: string) => {
       try {
-        if(topicName === ""){
-          return
+        if (topicName === "") {
+          return;
         }
         const questionData = {
           topicName: topicName,
@@ -47,13 +48,17 @@ const SearchBox = () => {
         router.push("/result");
         setShowNav(false);
       } catch (error) {
-        if(error instanceof Error) { throw new Error(`Something went wrong. Please try again. ${error.message }`)}
+        if (error instanceof Error) {
+          throw new Error(
+            `Something went wrong. Please try again. ${error.message}`
+          );
+        }
       }
     },
     [setUserQuestion, router, setShowNav]
   );
   return (
-    <div className="w-full  xl:w-[48rem] m-auto bg-gradient-to-r p-[2px] lg:p-1 rounded-xl md:rounded-3xl from-[#222057] to-[#F8991D]">
+    <div className="w-full md:w-[95%] xl:w-[48rem] m-auto bg-gradient-to-r p-[2px] lg:p-1 rounded-xl md:rounded-3xl from-[#222057] to-[#F8991D]">
       <div className="bg-white w-full border-0 rounded-[10px] md:rounded-[20px] px-3 lg:px-5 py-3">
         <input
           type="search"
@@ -61,6 +66,14 @@ const SearchBox = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pt-1 outline-0 bg-white"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              const formatInUse = userQuestion?.format
+              handleAnswer(search, formatInUse ? formatInUse : "video");
+              }
+          }}
+          role="button"
         />
         {selectedFile && (
           <div className="w-full my-2 p-2 bg-gray-100 rounded">
@@ -95,7 +108,7 @@ const SearchBox = () => {
               accept="image/*,application/pdf,.doc,.docx"
             />
             <div
-              className="flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer"
+              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${userQuestion?.format === "video" ? " py-1 px-2 rounded-md shadow-md shadow-[#F8991D]" : "border-0"}`}
               onClick={() => handleAnswer(search, "video")}
             >
               <svg
@@ -112,10 +125,12 @@ const SearchBox = () => {
                   d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
                 />
               </svg>
-              <p className="flex gap-1">Video <span className="hidden md:block">Research</span></p>
+              <p className="flex gap-1">
+                Video <span className="hidden lg:block">Research</span>
+              </p>
             </div>
             <div
-              className="flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer"
+              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${userQuestion?.format === "article" ? "shadow-md shadow-[#F8991D] py-1 px-2 rounded-md " : "border-0"}`}
               onClick={() => handleAnswer(search, "article")}
             >
               <Image
@@ -123,10 +138,10 @@ const SearchBox = () => {
                 alt=""
                 className="w-3 md:w-4 items-start"
               />
-              <p>Resources</p>
+              <p className="flex gap-1">General <span className="hidden lg:block">Research</span></p>
             </div>
             <div
-              className="flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer"
+              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${userQuestion?.format === "quiz" ? " py-1 px-2 rounded-md shadow-md shadow-[#F8991D]" : "border-0"}`}
               onClick={() => handleAnswer(search, "quiz")}
             >
               <Image src={quiz} alt="" className="w-2 md:w-3 items-start" />
@@ -134,7 +149,7 @@ const SearchBox = () => {
               <p>Quiz</p>
             </div>
             <div
-              className="flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer"
+              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${userQuestion?.format === "faq" ? " py-1 px-2 rounded-md shadow-md shadow-[#F8991D]" : "border-0"}`}
               onClick={() => handleAnswer(search, "faq")}
             >
               <Image src={faq} alt="" className="w-2 md:w-4 items-start" />
@@ -150,7 +165,10 @@ const SearchBox = () => {
             strokeWidth={1.5}
             stroke="currentColor"
             className="size-5 md:size-6 cursor-pointer"
-            onClick={() => handleAnswer(search, "article")}
+            onClick={() => {
+              const formatInUse = userQuestion?.format
+              handleAnswer(search, formatInUse ? formatInUse : "video");
+            }}
           >
             <path
               strokeLinecap="round"

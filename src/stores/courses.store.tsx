@@ -1,10 +1,20 @@
 import { create } from "zustand";
 import { CourseType, UserType } from "./auth.store";
+export interface SandboxType {
+  id: string,
+  topic: string,
+  sub_topic: [{
+    id: string,
+    name: string,
+    faq: []
+  }]
+}
 
 export const useCourseStore = create<{
   userCourses: CourseType[];
   loading: boolean;
   error: string | null;
+  sandbox: SandboxType[];
   fetchUserCourses: (user: UserType) => Promise<void>;
   clearCourses: () => void;
   
@@ -12,17 +22,20 @@ export const useCourseStore = create<{
   userCourses: [],
   loading: false,
   error: null,
+  sandbox: [] ,
 
   fetchUserCourses: async (user: UserType) => {
     set({ loading: true });
     try {
       let courses: CourseType[] = [];
+      let getSandbox: SandboxType[] = [];
 
       if (user.enrolled_courses) {
         courses = user.enrolled_courses;
+        getSandbox = user.sandbox
       }
 
-      set({ userCourses: courses });
+      set({ userCourses: courses, sandbox: getSandbox });
     } catch (error) {
       console.error("Error fetching courses:", error);
     } finally {
@@ -30,7 +43,7 @@ export const useCourseStore = create<{
     }
   },
   clearCourses: () => {
-    set({ userCourses: [], error: null });
+    set({ userCourses: [], error: null , sandbox: []});
   },
 
   // addCourse: (course: CourseType) => {

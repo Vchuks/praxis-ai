@@ -1,6 +1,7 @@
 
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
+import { SandboxType } from './courses.store';
 
 
 export interface CourseType {
@@ -16,6 +17,7 @@ export interface UserType {
   student_email: string,
   student_id_number: string,
   enrolled_courses: CourseType[],
+  sandbox: SandboxType[]
 
   // id: string
   // name: string

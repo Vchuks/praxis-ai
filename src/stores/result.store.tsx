@@ -3,14 +3,14 @@ import { useAuthStore } from "./auth.store";
 
 export type userMessageType = {
   course_topic: string;
-  format: string;
+  format: string | null | "";
   topicName: string
 };
 
-type UserQuestionType = {
-  sessionId: string;
-  userMessage: userMessageType[];
-};
+// type UserQuestionType = {
+//   sessionId: string;
+//   userMessage: userMessageType[];
+// };
 
 export type UserAnswerType = {
   response_type: string;
@@ -63,6 +63,8 @@ export const useResultStore = create<ResultType>()((set, get) => ({
 
   fetchAnswer: async (userQst) => {
     const { session_Id } = get();
+    const { user } = useAuthStore.getState();
+
     
     if (!session_Id) {
       const error = "Session ID not found";
@@ -84,8 +86,9 @@ export const useResultStore = create<ResultType>()((set, get) => ({
           method: "POST",
           headers: myHeaders,
           body: JSON.stringify({
-            sessionId: `${session_Id}g`,
+            sessionId: `${session_Id}h`,
             userMessage: JSON.stringify([userQst]),
+            student_email: user?.student_email
           }),
         }
       );

@@ -10,6 +10,7 @@ import { Tooltip } from "react-tooltip";
 import { useCourseStore, useResultStore, useSmallNavStore } from "@/stores";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+// import { eachboxType } from "@/stores/courses.store";
 
 type SubTopicType = {
   id: string;
@@ -30,7 +31,7 @@ type CourseType = {
 };
 
 const UserCourse = () => {
-  const { userCourses } = useCourseStore();
+  const { userCourses, sandbox } = useCourseStore();
   const { setUserQuestion } = useResultStore();
   const { setShowNav } = useSmallNavStore();
 
@@ -51,7 +52,7 @@ const UserCourse = () => {
           id: 3,
           pic: article,
           desc: "article",
-          label: "Resources",
+          label: "General Research",
         },
         {
           id: 4,
@@ -67,13 +68,16 @@ const UserCourse = () => {
         },
       ],
     },
+    
   ];
 
   const [courseDropdown, setCourseDropdown] = useState<number | null>(null);
   const [subTopicDropdown, setSubTopicDropdown] = useState<string | null>(null);
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [subTID, setSubTID] = useState<string | null>(null);
+  const [sandID, setSandID] = useState<string | null>(null);
   const [openSmall, setOpenSmall] = useState<string | null>(null);
+  const [openSmall2, setOpenSmall2] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -94,6 +98,28 @@ const UserCourse = () => {
     [subTopicDropdown]
   );
 
+  const [sandboxDropdown, setSandboxDropdown] = useState<string | null>(null);
+  const [sandboxSubTopicDropdown, setSandboxSubTopicDropdown] = useState<string | null>(null);
+  
+
+  const handleSandboxDropdown = useCallback(
+    (id: string) => {
+      setSandboxDropdown(sandboxDropdown === id ? null : id);
+      if (sandboxDropdown !== id) {
+        setSandboxSubTopicDropdown(null);
+      }
+    },
+    [sandboxDropdown]
+  );
+
+  const handleSandboxSubTopicDropdown = useCallback(
+    (id: string) => {
+      setSandboxSubTopicDropdown(sandboxSubTopicDropdown === id ? null : id);
+    },
+    [sandboxSubTopicDropdown]
+  );
+
+
   const handleFormatSelection = useCallback(
     async (
       topicName: string,
@@ -105,6 +131,7 @@ const UserCourse = () => {
       try {
         setLoadingAction(actionId);
         setSubTID(subId);
+        setSandID(sandID)
         const questionData = {
           topicName: topicName,
           course_topic: `${topicName} - ${subTopicName}`,
@@ -118,16 +145,24 @@ const UserCourse = () => {
         router.push("/result");
         setShowNav(false);
       } catch (error) {
-        throw new Error("Something went wrong. Please try again.");
+        if (error instanceof Error) {
+          throw new Error("Something went wrong. Please try again.", error);
+        }
       } finally {
         setLoadingAction(null);
+        setSubTID(null);
+        setSandID(sandID)
+        setOpenSmall(null);
       }
     },
-    [setUserQuestion, router, setShowNav]
+    [setUserQuestion, router, setShowNav, sandID]
   );
 
   const handleTools = (id: string) => {
     setOpenSmall(id);
+  };
+  const handleTools2 = (id: string) => {
+    setOpenSmall2(id);
   };
 
   if (!userCourses || userCourses.length === 0) {
@@ -182,7 +217,7 @@ const UserCourse = () => {
                     return (
                       <Fragment key={`topic-${topics.id}`}>
                         <div
-                          className={`flex items-center w-full justify-between py-2 cursor-pointer hover:bg-gray-50 rounded transition-colors duration-200
+                          className={`flex items-center w-full justify-between py-3 cursor-pointer hover:bg-gray-50 rounded transition-colors duration-200
                           
                           `}
                           onClick={() => handleSubTopicDropdown(topics.id)}
@@ -207,12 +242,12 @@ const UserCourse = () => {
                         </div>
                         <div
                           className={`transition-all duration-500 ease-out overflow-hidden
-            ${
-              subTopicDropdown === topics.id
-                ? "max-h-[400px] opacity-100"
-                : "max-h-0 opacity-0"
-            }
-  `}
+                              ${
+                                subTopicDropdown === topics.id
+                                  ? "max-h-[400px] opacity-100"
+                                  : "max-h-0 opacity-0"
+                              }
+                                   `}
                         >
                           {subTopicDropdown === topics.id &&
                             topics?.sub_topic?.map((subT: SubTopicType) => (
@@ -223,15 +258,26 @@ const UserCourse = () => {
                                     ? "opacity-100"
                                     : subTID === null
                                     ? "opacity-100"
-                                    : "opacity-50"
+                                    : "opacity-70"
                                 } 
                             
                             `}
                               >
-                                <p className="mb-2 text-sm w-full text-gray-600 leading-relaxed">
+                                <p
+                                  className="mb-2 text-sm w-full text-gray-600 leading-relaxed cursor-pointer"
+                                  onClick={() =>
+                                    handleFormatSelection(
+                                      topics.topic,
+                                      subT.name,
+                                      "video",
+                                      subT.id,
+                                      subT.id
+                                    )
+                                  }
+                                >
                                   {subT.name}
                                 </p>
-                                <div className=" flex items-baseline gap-2 w-20 justify-end">
+                                <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end">
                                   {tooltipData.map((tooltip) => {
                                     const actionId = `${subT.id}-${tooltip.id}`;
                                     const isLoading =
@@ -258,12 +304,6 @@ const UserCourse = () => {
                                                 )
                                               : handleTools(subT.id);
                                           }}
-                                          onMouseEnter={() => {
-                                            return tooltip.desc === ""
-                                              ? handleTools(subT.id)
-                                              : null;
-                                          }}
-                                          
                                           disabled={isLoading}
                                           data-tooltip-id={`tooltip-${tooltip.id}`}
                                           data-tooltip-content={tooltip.desc}
@@ -275,8 +315,11 @@ const UserCourse = () => {
                                             <Image
                                               src={tooltip.pic}
                                               alt={tooltip.desc}
-                                              className={`${tooltip.desc === "" ? "w-4 h-5" : "w-6 h-6"} object-contain cursor-pointer`}
-                                              
+                                              className={`${
+                                                tooltip.desc === ""
+                                                  ? "w-4 h-5"
+                                                  : "w-6 h-6"
+                                              } object-contain cursor-pointer`}
                                             />
                                           )}
                                         </button>
@@ -284,7 +327,7 @@ const UserCourse = () => {
                                         {/* dots to reveal other icons */}
                                         {openSmall === subT.id && (
                                           <div
-                                            className={`w-fit absolute left-48 bg-white py-2 px-4 flex flex-col gap-2 
+                                            className={`w-fit absolute left-32 bg-white z-20 py-2 px-4 flex flex-col gap-2 
                           shadow-2xl shadow-[#0000001A] rounded-l-2xl rounded-ee-2xl
                           transition-all duration-300 ease-out transform-gpu
                           ${
@@ -292,10 +335,7 @@ const UserCourse = () => {
                               ? "opacity-100 scale-100 translate-y-0"
                               : "opacity-0 scale-95 translate-y-[-10px] pointer-events-none"
                           }`}
-                                       onMouseLeave={() => {
-                                                      return handleTools("")
-                                              
-                                                    }}   >
+                                          >
                                             {tooltip.child &&
                                               tooltip.child.map((eachC) => {
                                                 const actionId2 = `${subT.id}-${eachC.id}`;
@@ -318,7 +358,6 @@ const UserCourse = () => {
                                                         subT.id
                                                       );
                                                     }}
-                                                    
                                                     disabled={isLoading}
                                                     data-tooltip-id={`tooltip-${eachC.id}`}
                                                     data-tooltip-content={
@@ -363,16 +402,200 @@ const UserCourse = () => {
           </Fragment>
         );
       })}
+      {sandbox.map((each: TopicType) => {
+        return (
+          <Fragment key={`course-${each.id}`}>
+            <div
+              className="grid grid-cols-7 w-full my-4 items-center bg-[#F5F6FA] py-2 cursor-pointer hover:bg-[#F0F1F5] transition-colors duration-200"
+              onClick={() => handleSandboxDropdown(each.id)}
+              role="button"
+              aria-expanded={sandboxDropdown === each.id}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleSandboxDropdown(each.id);
+                }
+              }}
+            >
+              <p className="w-[0.30rem] h-8 rounded-2xl bg-[#F8991D]"></p>
+              <h3 className="text-[#F8991D] col-span-5 text-lg font-semibold text-center">
+                {each.topic}
+              </h3>
+              {sandboxDropdown === each.id ? (
+                <ChevronUpIcon className="w-5 text-[#F8991D]" />
+              ) : (
+                <ChevronDownIcon className="w-5 text-[#F8991D]" />
+              )}
+            </div>
+            <div
+              className={`
+  transition-all duration-500 ease-out overflow-hidden
+  ${
+    sandboxDropdown === each.id
+      ? "max-h-[800px] opacity-100"
+      : "max-h-0 opacity-0"
+  }
+`}
+            >
+              {sandboxDropdown === each.id && (
+                <div className="relative px-4 rounded-b-lg pb-4 overflow-y-auto no-scrollbar">
+                  {each?.sub_topic?.map((topics: SubTopicType) => {
+                    return (
+                      <Fragment key={`topic-${topics.id}`}>
+                        <div
+                          className={`flex items-center w-full justify-between py-3 cursor-pointer hover:bg-gray-50 rounded transition-colors duration-200
+                          
+                          `}
+                          onClick={() => handleSandboxSubTopicDropdown(topics.id)}
+                          role="button"
+                          aria-expanded={sandboxSubTopicDropdown === topics.id}
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleSandboxSubTopicDropdown(topics.id);
+                            }
+                          }}
+                        >
+                          <p className="text-sm w-full truncate font-medium text-gray-700">
+                            {topics.name}
+                          </p>
+                          <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end">
+                                  {tooltipData.map((tooltip) => {
+                                    const actionId = `${topics.id}-${tooltip.id}`;
+                                    const isLoading =
+                                      loadingAction === actionId;
+
+                                    return (
+                                      <Fragment
+                                        key={`action-${tooltip.id}-${topics.id}`}
+                                      >
+                                        <button
+                                          className={` rounded-lg transition-all duration-200 hover:shadow-md ${
+                                            isLoading
+                                              ? "bg-gray-100 cursor-wait"
+                                              : "bg-white hover:bg-gray-50 active:scale-95"
+                                          }`}
+                                          onClick={() => {
+                                            return tooltip.desc !== ""
+                                              ? handleFormatSelection(
+                                                  topics.name,
+                                                  each.topic,
+                                                  tooltip.desc,
+                                                  actionId,
+                                                  topics.id
+                                                )
+                                              : handleTools2(topics.id);
+                                          }}
+                                          disabled={isLoading}
+                                          data-tooltip-id={`tooltip-${tooltip.id}`}
+                                          data-tooltip-content={tooltip.desc}
+                                          aria-label={`${tooltip.desc} for ${each.topic}`}
+                                        >
+                                          {isLoading ? (
+                                            <div className="w-6 h-6 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
+                                          ) : (
+                                            <Image
+                                              src={tooltip.pic}
+                                              alt={tooltip.desc}
+                                              className={`${
+                                                tooltip.desc === ""
+                                                  ? "w-4 h-5"
+                                                  : "w-6 h-6"
+                                              } object-contain cursor-pointer`}
+                                            />
+                                          )}
+                                        </button>
+
+                                        {/* dots to reveal other icons */}
+                                        {openSmall2 === topics.id && (
+                                          <div
+                                            className={`w-fit absolute left-32 bg-white z-20 py-2 px-4 flex flex-col gap-2 
+                          shadow-2xl shadow-[#0000001A] rounded-l-2xl rounded-ee-2xl
+                          transition-all duration-300 ease-out transform-gpu
+                          ${
+                            openSmall2 === topics.id
+                              ? "opacity-100 scale-100 translate-y-0"
+                              : "opacity-0 scale-95 translate-y-[-10px] pointer-events-none"
+                          }`}
+                                          >
+                                            {tooltip.child &&
+                                              tooltip.child.map((eachC) => {
+                                                const actionId2 = `${topics.id}-${eachC.id}`;
+                                                const isLoading =
+                                                  loadingAction === actionId2;
+                                                return (
+                                                  <button
+                                                    key={eachC.id}
+                                                    className={` rounded-lg transition-all duration-200  hover:shadow-md ${
+                                                      isLoading
+                                                        ? "bg-gray-100 cursor-wait"
+                                                        : "bg-white hover:bg-gray-50 active:scale-95"
+                                                    }`}
+                                                    onClick={() => {
+                                                      return handleFormatSelection(
+                                                        topics.name,
+                                                        each.topic,
+                                                        eachC.desc,
+                                                        actionId2,
+                                                        topics.id
+                                                      );
+                                                    }}
+                                                    disabled={isLoading}
+                                                    data-tooltip-id={`tooltip-${eachC.id}`}
+                                                    data-tooltip-content={
+                                                      eachC.desc
+                                                    }
+                                                    aria-label={`${eachC.desc} for ${each.topic}`}
+                                                  >
+                                                    <div className="flex gap-2">
+                                                      {isLoading ? (
+                                                        <div className="w-4 h-4 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
+                                                      ) : (
+                                                        <Image
+                                                          src={eachC.pic}
+                                                          alt={eachC.desc}
+                                                          className="w-4 h-4 object-contain cursor-pointer"
+                                                          // width={24}
+                                                          // height={24}
+                                                        />
+                                                      )}
+                                                      <p className="text-sm">
+                                                        {eachC.label}
+                                                      </p>
+                                                    </div>
+                                                  </button>
+                                                );
+                                              })}
+                                          </div>
+                                        )}
+                                      </Fragment>
+                                    );
+                                  })}
+                                </div>
+                        </div>
+                        
+                      </Fragment>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </Fragment>
+        );
+      })}
 
       {/* Tooltips - Place outside the map to avoid duplication */}
-      {tooltipData.map((item) => (
-        <Fragment key={item.id}>
+      {tooltipData.map((item) =>{
+        console.log(item) 
+        return <Fragment key={item.id}>
           {item.child ? (
             item.child.map((item) => (
               <Tooltip
                 key={`tooltip-component-${item.id}`}
                 id={`tooltip-${item.id}`}
-                className="text-sm bg-gray-800 text-white px-2 py-1 rounded shadow-lg"
+                className="text-sm bg-gray-800 text-white px-2 py-1 rounded shadow-lg z-30"
                 place="top"
               />
             ))
@@ -385,7 +608,7 @@ const UserCourse = () => {
             />
           )}
         </Fragment>
-      ))}
+      })}
     </div>
   );
 };

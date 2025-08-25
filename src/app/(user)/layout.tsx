@@ -5,7 +5,6 @@ import Sidebar from "@/components/sidebar";
 import { useAuthStore, useCourseStore, useResultStore } from "@/stores";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import Login from "../(auth)/login/page";
 
 export default function UserLayout({
   children,
@@ -104,9 +103,9 @@ if (!isAuthenticated || !user) {
       <div className="hidden md:block">
         <Sidebar />
       </div>
-      <div className="w-full">
+      <div className="w-full h-[100vh] overflow-y-auto flex flex-col justify-between">
         <Header />
-        <div className="h-[88vh] md:h-[79vh] lg:h-[75vh] overflow-y-auto px-4 md:px-0">
+        <div className=" px-4 md:px-0">
           {children}
         </div>
         {pathname !== "/welcome" && (
