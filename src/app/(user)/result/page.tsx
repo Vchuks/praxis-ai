@@ -1,5 +1,12 @@
 "use client";
-import { useEffect, useState, useCallback, useRef, Fragment } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  Fragment,
+  useMemo,
+} from "react";
 import { useResultStore } from "@/stores";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -17,6 +24,9 @@ export interface ResponseItem {
 
 interface ContentData {
   content: string;
+  materials: {
+    articles: ResponseItem[];
+  };
 }
 
 interface QuizQuestion {
@@ -25,7 +35,7 @@ interface QuizQuestion {
   options?: string[];
   correct_answer?: string;
   type?: string;
-  articles:ResponseItem[]
+  articles: ResponseItem[];
 }
 
 interface QuizData {
@@ -49,11 +59,6 @@ interface UserAnswer {
   response_type: string;
   question?: string;
 }
-// interface UserQuestion {
-//   course_topic: string;
-//   topicName?: string;
-//   format?: string;
-// }
 
 interface ConversationEntry {
   id: string;
@@ -118,11 +123,11 @@ const QuizContent = ({ userAnswer }: { userAnswer: UserAnswer }) => {
     );
   }
 
-  const quizData = userAnswer.data as { 
-    topic: string; 
-    questions: [] | { content: string; } | QuizDataObject[] 
+  const quizData = userAnswer.data as {
+    topic: string;
+    questions: [] | { content: string } | QuizDataObject[];
   };
-  
+
   return (
     <div className="py-4 w-full lg:w-[45rem] px-2 md:px-4 mt-4">
       <Quiz quizData={quizData} />
@@ -131,7 +136,11 @@ const QuizContent = ({ userAnswer }: { userAnswer: UserAnswer }) => {
 };
 
 // Updated FAQ rendering section
-const renderFaqContent = (entry: ConversationEntry, subTID: string | null, handleFaqDropdown: (id: string) => void) => {
+const renderFaqContent = (
+  entry: ConversationEntry,
+  subTID: string | null,
+  handleFaqDropdown: (id: string) => void
+) => {
   if (!isFaqData(entry.answer.data)) {
     return (
       <div className=" p-4 rounded-lg">
@@ -145,8 +154,8 @@ const renderFaqContent = (entry: ConversationEntry, subTID: string | null, handl
       {entry.answer.data.faqs.map((each: FaqT, index: number) => (
         <Fragment key={`faq-${index}-${each.question}`}>
           <div>
-            <p 
-              className="font-semibold text-lg p-4 shadow-sm cursor-pointer hover:bg-gray-50" 
+            <p
+              className="font-semibold text-lg p-4 shadow-sm cursor-pointer hover:bg-gray-50"
               onClick={() => handleFaqDropdown(each.answer)}
             >
               {each.question}
@@ -154,9 +163,9 @@ const renderFaqContent = (entry: ConversationEntry, subTID: string | null, handl
           </div>
           {subTID === each.answer && (
             <div className="shadow-md rounded-b-md">
-            <p className="px-4 py-6 w-full lg:w-[45rem] leading-relaxed text-base mb-3">
-              {each.answer}
-            </p>
+              <p className="px-4 py-6 w-full lg:w-[45rem] leading-relaxed text-base mb-3">
+                {each.answer}
+              </p>
             </div>
           )}
         </Fragment>
@@ -254,10 +263,10 @@ const ArticleContent = ({
   items: ResponseItem[];
   question: string;
 }) => (
-  <div className="py-4 w-full lg:w-[45rem] px-2 md:px-4 mt-4">
-    <div className="bg-white p-4 rounded-t-xl mb-2">
+  <div className={`py-4 w-full lg:w-[45rem] px-2 md:px-4 ${question !== "" ? "mt-4" : "mt-0"}`}>
+    {question !== "" ?<div className="bg-white p-4 rounded-t-xl mb-2">
       <h2 className="text-xl font-semibold">{question}</h2>
-    </div>
+    </div> : null}
     <div className="pl-6 pr-4 lg:pl-16 rounded-lg mt-4">
       {items.map((item, index) => (
         <div key={`article-${index}`} className="">
@@ -284,19 +293,24 @@ const ArticleContent = ({
   </div>
 );
 
-
 // Component for rendering general content
 const GeneralContent = ({
-  data,
-  topicName,
+  data
 }: {
   data: ContentData | string;
   topicName: string;
 }) => (
   <div className="prose max-w-none bg-white rounded-lg p-6">
-    <h2 className="text-xl font-bold mb-4">{topicName}</h2>
     {isContentData(data) ? (
-      <p className="leading-relaxed text-gray-800">{data.content}</p>
+      <div>
+        <p className="leading-relaxed text-gray-800 w-[40rem] px-2 md:px-6">{data.content}</p>
+        <div>
+          <ArticleContent
+              items={data.materials.articles}
+              question=""
+            />
+        </div>
+      </div>
     ) : (
       <p className="text-gray-700 leading-relaxed">
         {typeof data === "string" ? data : JSON.stringify(data, null, 2)}
@@ -314,7 +328,6 @@ const ConversationEntry = ({
   isLatest: boolean;
 }) => {
   const topicName = entry.question;
-  console.log(entry);
   const [subTID, setSubTID] = useState<string | null>(null);
   const handleFaqDropdown = useCallback(
     (id: string) => {
@@ -323,7 +336,7 @@ const ConversationEntry = ({
     [subTID]
   );
   return (
-    <div className={`conversation-entry ${isLatest ? "mb-8" : "mb-12"}`}>
+    <div className={`conversation-entry ${isLatest ? "mb-2" : "mb-12"}`}>
       {/* Question Display */}
       <section
         className="bg-white w-11/12 lg:w-3/4 ml-auto rounded-l-[100px] md:rounded-l-[200px] rounded-br-[100px] md:rounded-br-[200px] p-4 mb-4"
@@ -360,16 +373,17 @@ const ConversationEntry = ({
 
         {entry.format === "quiz" && <QuizContent userAnswer={entry.answer} />}
 
-        {entry.format === "content" && (isContentData(entry.answer.data) || typeof entry.answer.data === "string") && (
-          <GeneralContent
-            data={entry.answer.data as ContentData | string}
-            topicName={topicName}
-          />
-        )}
+        {entry.format === "article" &&
+          (isContentData(entry.answer.data) ||
+            typeof entry.answer.data === "object") && (
+            <GeneralContent
+              data={entry.answer.data as ContentData | string}
+              topicName={topicName}
+            />
+          )}
 
-        {entry.format === "faq" && (
-          renderFaqContent(entry, subTID, handleFaqDropdown)
-        )}
+        {entry.format === "faq" &&
+          renderFaqContent(entry, subTID, handleFaqDropdown)}
       </div>
     </div>
   );
@@ -396,23 +410,30 @@ const LoadingIndicator = () => (
 );
 
 // Error component
-const ErrorState = ({ onRetry }: { onRetry: () => void }) => (
-  <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-    <div className="text-red-600 text-center">
-      <h2 className="text-xl font-semibold mb-2">Oops! Something went wrong</h2>
-      <p className="text-gray-600 mb-4">
-        We encountered an error while loading your content.
-      </p>
+const ErrorState = ({ onRetry }: { onRetry: () => void }) => {
+  const { error } = useResultStore();
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+      <div className="text-red-600 text-center">
+        <h2 className="text-lg font-semibold mb-2">
+          Oops! Something went wrong
+        </h2>
+        <p className="text-gray-600 mb-4">
+          We encountered an error while loading your content.
+        </p>
+        <p>{error}</p>
+      </div>
+      <button
+        onClick={onRetry}
+        className="px-6 py-2 bg-[#F8991D] text-white rounded-lg hover:bg-[#e8821a] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#F8991D] focus:ring-opacity-50"
+        aria-label="Retry loading content"
+      >
+        Try Again
+      </button>
     </div>
-    <button
-      onClick={onRetry}
-      className="px-6 py-2 bg-[#F8991D] text-white rounded-lg hover:bg-[#e8821a] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#F8991D] focus:ring-opacity-50"
-      aria-label="Retry loading content"
-    >
-      Try Again
-    </button>
-  </div>
-);
+  );
+};
 
 // No content component
 const NoContentState = ({ onSelectTopic }: { onSelectTopic: () => void }) => (
@@ -436,8 +457,9 @@ const ResultPage = () => {
   >([]);
   const router = useRouter();
 
+  
   const bottomRef = useRef<HTMLDivElement>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Improved scroll to bottom function
   const scrollToBottom = useCallback(() => {
@@ -455,31 +477,32 @@ const ResultPage = () => {
       });
 
       // Method 2: Backup scroll after a delay to handle dynamic content
-      scrollTimeoutRef.current = setTimeout(() => {
-        scrollElement.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-          inline: "nearest",
-        });
-      }, 100);
+      // scrollTimeoutRef.current = setTimeout(() => {
+      //   scrollElement.scrollIntoView({
+      //     behavior: "smooth",
+      //     block: "end",
+      //     inline: "nearest",
+      //   });
+      // }, 100);
     }
   }, []);
 
   // Load conversation history from sessionStorage on component mount
-  useEffect(() => {
+  useMemo(() => {
     const savedHistory = JSON.parse(
       sessionStorage.getItem("conversationHistory") || "[]"
     );
     setConversationHistory(savedHistory);
 
     // Scroll to bottom after loading history
-    if (savedHistory.length > 0) {
-      // Use requestAnimationFrame to ensure DOM is ready
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-    }
-  }, [scrollToBottom]);
+    // if (savedHistory.length > 0) {
+    //   // Use requestAnimationFrame to ensure DOM is ready
+    //   requestAnimationFrame(() => {
+    //     scrollToBottom();
+    //   });
+    // }
+    // setTimeout(() => scrollToBottom(), 600);
+  }, []);
 
   // Save conversation history to sessionStorage whenever it changes
   useEffect(() => {
@@ -508,25 +531,10 @@ const ResultPage = () => {
       };
 
       setConversationHistory((prev) => {
-        // Check if this exact question-answer pair already exists
-        const exists = prev.some(
-          (entry) =>
-            entry.question === newEntry.question &&
-            JSON.stringify(entry.answer) === JSON.stringify(newEntry.answer)
-        );
-
-        if (!exists) {
-          // Keep only last 20 conversations to avoid excessive storage
-          const updated = [...prev, newEntry];
-          return updated.slice(-20);
-        }
-        return prev;
+        const updated = [...prev, newEntry];
+        return updated.slice(-20);
       });
 
-      // Scroll to bottom after new entry is added
-      // Use multiple timeouts to handle different rendering scenarios
-      setTimeout(() => scrollToBottom(), 100);
-      setTimeout(() => scrollToBottom(), 300);
       setTimeout(() => scrollToBottom(), 600);
     }
   }, [
@@ -538,13 +546,13 @@ const ResultPage = () => {
   ]);
 
   // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (scrollTimeoutRef.current) {
+  //       clearTimeout(scrollTimeoutRef.current);
+  //     }
+  //   };
+  // }, []);
   // Event handlers
   const handleRetry = () => {
     window.location.reload();
@@ -566,10 +574,7 @@ const ResultPage = () => {
 
   // Render main content
   return (
-    <main
-      className="max-w-4xl  mx-auto px-2 lg:px-0 py-6 space-y-6"
-      role="main"
-    >
+    <main className="max-w-4xl mx-auto px-2 lg:px-0 py-6 space-y-6" role="main">
       {/* Render conversation history */}
       {conversationHistory.map((entry, index) => (
         <ConversationEntry

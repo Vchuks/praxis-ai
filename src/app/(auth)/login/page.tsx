@@ -125,8 +125,8 @@ const Login = () => {
                 <h2 
                   className={`
                     cursor-pointer w-full lg:w-[32rem] m-auto bg-clip-text text-transparent 
-                    bg-gradient-to-br from-[#222057] to-[#F8991D] to-80% md:text-3xl lg:text-4xl 
-                    font-[900] text-center transition-all duration-700 ease-out
+                    bg-gradient-to-br from-[#222057] to-[#F8991D] to-80% md:text-2xl lg:text-4xl 
+                    font-[900] text-center transition-all duration-700 ease-out 
                     ${isActive && !isAnimating 
                       ? 'opacity-100 transform translate-y-0' 
                       : 'opacity-0 transform translate-y-8'
@@ -143,7 +143,7 @@ const Login = () => {
                 <p 
                   className={`
                     text-white font-light pt-2 pb-4 w-full md:px-2 lg:px-4 lg:w-[30rem] 
-                    xl:w-[35rem] m-auto text-center text-sm xl:text-base 
+                    xl:w-[35rem] m-auto text-center text-xs lg:text-sm xl:text-base 
                     transition-all duration-700 ease-out
                     ${isActive && !isAnimating 
                       ? 'opacity-100 transform translate-y-0' 
@@ -173,7 +173,7 @@ const Login = () => {
                   <Image 
                     src={each.pix} 
                     alt={`Welcome screen ${each.id}`}
-                    className="w-80 h-96 object-contain lg:w-64 xl:w-80 pt-6 transform hover:scale-103 transition-transform duration-300"
+                    className="w-80 h-[22rem] xl:h-96 object-contain lg:w-64 xl:w-80 lg:pt-6 transform hover:scale-103 transition-transform duration-300"
                   />
                 </div>
 
@@ -181,7 +181,7 @@ const Login = () => {
                 {viewScreen < 4 && (
                   <button
                     className={`
-                      absolute lg:top-80 xl:top-96 right-0 pr-12 pt-8 text-gray-300 
+                      absolute top-70 lg:top-80 xl:top-96 -right-10 lg:right-0 pr-12 pt-8 text-gray-300 
                       font-semibold cursor-pointer hover:text-white transition-all duration-300
                       transform hover:translate-x-1
                       ${isActive && !isAnimating 
@@ -202,7 +202,7 @@ const Login = () => {
                 {viewScreen > 1 && viewScreen <= 4 && (
                   <button
                     className={`
-                      absolute lg:top-80 xl:top-96 left-10 pr-12 pt-8 text-gray-300 
+                      absolute top-70 lg:top-80 xl:top-96 left-2 lg:left-10 pr-12 pt-8 text-gray-300 
                       font-semibold cursor-pointer hover:text-white transition-all duration-300
                       transform hover:-translate-x-1
                       ${isActive && !isAnimating 
@@ -253,7 +253,7 @@ const Login = () => {
       </div>
 
       <div className="w-full md:bg-white inh flex items-center">
-        <div className="w-11/12 md:w-full lg:w-10/12 bg-white m-auto px-6 pt-8 pb-8 md:mt-20 lg:mt-auto lg:p-14 rounded-2xl transform hover:shadow-2xl transition-all duration-300">
+        <div className="w-11/12 md:w-full lg:w-10/12 bg-white m-auto px-6 pt-8 pb-8 md:mt-20 lg:mt-0 lg:p-14 rounded-2xl transform hover:shadow-2xl transition-all duration-300">
           <h2 className="w-fit font-inter m-auto py-2 bg-clip-text text-transparent bg-gradient-to-br from-[#222057] to-[#F8991D] to-80% font-[900] text-2xl md:text-4xl text-center animate-pulse">
             Welcome Back!
           </h2>

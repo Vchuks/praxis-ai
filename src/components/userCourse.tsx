@@ -4,7 +4,7 @@ import article from "../../public/assets/global-search.png";
 import ask from "../../public/assets/quiz.png";
 import dots from "../../public/assets/dots.png";
 import faq from "../../public/assets/faq.png";
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useMemo, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { Tooltip } from "react-tooltip";
 import { useCourseStore, useResultStore, useSmallNavStore } from "@/stores";
@@ -52,7 +52,7 @@ const UserCourse = () => {
           id: 3,
           pic: article,
           desc: "article",
-          label: "General Research",
+          label: "General Study",
         },
         {
           id: 4,
@@ -68,7 +68,6 @@ const UserCourse = () => {
         },
       ],
     },
-    
   ];
 
   const [courseDropdown, setCourseDropdown] = useState<number | null>(null);
@@ -80,10 +79,14 @@ const UserCourse = () => {
   const [openSmall2, setOpenSmall2] = useState<string | null>(null);
 
   const router = useRouter();
+  useMemo(() => {
+    setCourseDropdown(userCourses[0]?.course_code);
+  }, [userCourses]);
 
   const handleCourseDropdown = useCallback(
     (id: number) => {
       setCourseDropdown(courseDropdown === id ? null : id);
+      setSandboxDropdown(null);
       if (courseDropdown !== id) {
         setSubTopicDropdown(null);
       }
@@ -99,12 +102,14 @@ const UserCourse = () => {
   );
 
   const [sandboxDropdown, setSandboxDropdown] = useState<string | null>(null);
-  const [sandboxSubTopicDropdown, setSandboxSubTopicDropdown] = useState<string | null>(null);
-  
+  const [sandboxSubTopicDropdown, setSandboxSubTopicDropdown] = useState<
+    string | null
+  >(null);
 
   const handleSandboxDropdown = useCallback(
     (id: string) => {
       setSandboxDropdown(sandboxDropdown === id ? null : id);
+      setCourseDropdown(null);
       if (sandboxDropdown !== id) {
         setSandboxSubTopicDropdown(null);
       }
@@ -119,7 +124,6 @@ const UserCourse = () => {
     [sandboxSubTopicDropdown]
   );
 
-
   const handleFormatSelection = useCallback(
     async (
       topicName: string,
@@ -131,15 +135,16 @@ const UserCourse = () => {
       try {
         setLoadingAction(actionId);
         setSubTID(subId);
-        setSandID(sandID)
+        setSandID(sandID);
         const questionData = {
           topicName: topicName,
           course_topic: `${topicName} - ${subTopicName}`,
           format: format,
         };
 
+        const getD = format === "article"? true : false
         // Set the user question and wait for completion
-        await setUserQuestion(questionData);
+        await setUserQuestion(questionData, getD);
 
         // Navigate to results page after data is set
         router.push("/result");
@@ -151,7 +156,7 @@ const UserCourse = () => {
       } finally {
         setLoadingAction(null);
         setSubTID(null);
-        setSandID(sandID)
+        setSandID(sandID);
         setOpenSmall(null);
       }
     },
@@ -191,14 +196,14 @@ const UserCourse = () => {
                 }
               }}
             >
-              <p className="w-[0.30rem] h-8 rounded-2xl bg-[#F8991D]"></p>
-              <h3 className="text-[#F8991D] col-span-5 text-lg font-semibold text-center">
+              <p className="w-[0.30rem] h-8 rounded-2xl bg-[#222057]"></p>
+              <h3 className="text-[#222057] col-span-5 text-lg font-semibold text-center">
                 {each.coursename}
               </h3>
               {courseDropdown === each.course_code ? (
-                <ChevronUpIcon className="w-5 text-[#F8991D]" />
+                <ChevronUpIcon className="w-5 text-[#222057]" />
               ) : (
-                <ChevronDownIcon className="w-5 text-[#F8991D]" />
+                <ChevronDownIcon className="w-5 text-[#222057]" />
               )}
             </div>
             <div
@@ -418,14 +423,14 @@ const UserCourse = () => {
                 }
               }}
             >
-              <p className="w-[0.30rem] h-8 rounded-2xl bg-[#F8991D]"></p>
-              <h3 className="text-[#F8991D] col-span-5 text-lg font-semibold text-center">
+              <p className="w-[0.30rem] h-8 rounded-2xl bg-[#222057]"></p>
+              <h3 className="text-[#222057] col-span-5 text-lg font-semibold text-center">
                 {each.topic}
               </h3>
               {sandboxDropdown === each.id ? (
-                <ChevronUpIcon className="w-5 text-[#F8991D]" />
+                <ChevronUpIcon className="w-5 text-[#222057]" />
               ) : (
-                <ChevronDownIcon className="w-5 text-[#F8991D]" />
+                <ChevronDownIcon className="w-5 text-[#222057]" />
               )}
             </div>
             <div
@@ -447,7 +452,15 @@ const UserCourse = () => {
                           className={`flex items-center w-full justify-between py-3 cursor-pointer hover:bg-gray-50 rounded transition-colors duration-200
                           
                           `}
-                          onClick={() => handleSandboxSubTopicDropdown(topics.id)}
+                          onClick={()=>{
+                            return handleFormatSelection(
+                                            topics.name,
+                                            each.topic,
+                                            "video",
+                                            topics.id,
+                                            topics.id
+                                          )
+                          }}
                           role="button"
                           aria-expanded={sandboxSubTopicDropdown === topics.id}
                           tabIndex={0}
@@ -458,60 +471,59 @@ const UserCourse = () => {
                             }
                           }}
                         >
-                          <p className="text-sm w-full truncate font-medium text-gray-700">
+                          <p className="text-sm w-full truncate font-medium text-gray-600">
                             {topics.name}
                           </p>
                           <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end">
-                                  {tooltipData.map((tooltip) => {
-                                    const actionId = `${topics.id}-${tooltip.id}`;
-                                    const isLoading =
-                                      loadingAction === actionId;
+                            {tooltipData.map((tooltip) => {
+                              const actionId = `${topics.id}-${tooltip.id}`;
+                              const isLoading = loadingAction === actionId;
 
-                                    return (
-                                      <Fragment
-                                        key={`action-${tooltip.id}-${topics.id}`}
-                                      >
-                                        <button
-                                          className={` rounded-lg transition-all duration-200 hover:shadow-md ${
-                                            isLoading
-                                              ? "bg-gray-100 cursor-wait"
-                                              : "bg-white hover:bg-gray-50 active:scale-95"
-                                          }`}
-                                          onClick={() => {
-                                            return tooltip.desc !== ""
-                                              ? handleFormatSelection(
-                                                  topics.name,
-                                                  each.topic,
-                                                  tooltip.desc,
-                                                  actionId,
-                                                  topics.id
-                                                )
-                                              : handleTools2(topics.id);
-                                          }}
-                                          disabled={isLoading}
-                                          data-tooltip-id={`tooltip-${tooltip.id}`}
-                                          data-tooltip-content={tooltip.desc}
-                                          aria-label={`${tooltip.desc} for ${each.topic}`}
-                                        >
-                                          {isLoading ? (
-                                            <div className="w-6 h-6 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
-                                          ) : (
-                                            <Image
-                                              src={tooltip.pic}
-                                              alt={tooltip.desc}
-                                              className={`${
-                                                tooltip.desc === ""
-                                                  ? "w-4 h-5"
-                                                  : "w-6 h-6"
-                                              } object-contain cursor-pointer`}
-                                            />
-                                          )}
-                                        </button>
+                              return (
+                                <Fragment
+                                  key={`action-${tooltip.id}-${topics.id}`}
+                                >
+                                  <button
+                                    className={` rounded-lg transition-all duration-200 hover:shadow-md ${
+                                      isLoading
+                                        ? "bg-gray-100 cursor-wait"
+                                        : "bg-white hover:bg-gray-50 active:scale-95"
+                                    }`}
+                                    onClick={() => {
+                                      return tooltip.desc !== ""
+                                        ? handleFormatSelection(
+                                            topics.name,
+                                            each.topic,
+                                            tooltip.desc,
+                                            actionId,
+                                            topics.id
+                                          )
+                                        : handleTools2(topics.id);
+                                    }}
+                                    disabled={isLoading}
+                                    data-tooltip-id={`tooltip-${tooltip.id}`}
+                                    data-tooltip-content={tooltip.desc}
+                                    aria-label={`${tooltip.desc} for ${each.topic}`}
+                                  >
+                                    {isLoading ? (
+                                      <div className="w-6 h-6 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
+                                    ) : (
+                                      <Image
+                                        src={tooltip.pic}
+                                        alt={tooltip.desc}
+                                        className={`${
+                                          tooltip.desc === ""
+                                            ? "w-4 h-5"
+                                            : "w-6 h-6"
+                                        } object-contain cursor-pointer`}
+                                      />
+                                    )}
+                                  </button>
 
-                                        {/* dots to reveal other icons */}
-                                        {openSmall2 === topics.id && (
-                                          <div
-                                            className={`w-fit absolute left-32 bg-white z-20 py-2 px-4 flex flex-col gap-2 
+                                  {/* dots to reveal other icons */}
+                                  {openSmall2 === topics.id && (
+                                    <div
+                                      className={`w-fit absolute left-32 bg-white z-20 py-2 px-4 flex flex-col gap-2 
                           shadow-2xl shadow-[#0000001A] rounded-l-2xl rounded-ee-2xl
                           transition-all duration-300 ease-out transform-gpu
                           ${
@@ -519,63 +531,60 @@ const UserCourse = () => {
                               ? "opacity-100 scale-100 translate-y-0"
                               : "opacity-0 scale-95 translate-y-[-10px] pointer-events-none"
                           }`}
-                                          >
-                                            {tooltip.child &&
-                                              tooltip.child.map((eachC) => {
-                                                const actionId2 = `${topics.id}-${eachC.id}`;
-                                                const isLoading =
-                                                  loadingAction === actionId2;
-                                                return (
-                                                  <button
-                                                    key={eachC.id}
-                                                    className={` rounded-lg transition-all duration-200  hover:shadow-md ${
-                                                      isLoading
-                                                        ? "bg-gray-100 cursor-wait"
-                                                        : "bg-white hover:bg-gray-50 active:scale-95"
-                                                    }`}
-                                                    onClick={() => {
-                                                      return handleFormatSelection(
-                                                        topics.name,
-                                                        each.topic,
-                                                        eachC.desc,
-                                                        actionId2,
-                                                        topics.id
-                                                      );
-                                                    }}
-                                                    disabled={isLoading}
-                                                    data-tooltip-id={`tooltip-${eachC.id}`}
-                                                    data-tooltip-content={
-                                                      eachC.desc
-                                                    }
-                                                    aria-label={`${eachC.desc} for ${each.topic}`}
-                                                  >
-                                                    <div className="flex gap-2">
-                                                      {isLoading ? (
-                                                        <div className="w-4 h-4 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
-                                                      ) : (
-                                                        <Image
-                                                          src={eachC.pic}
-                                                          alt={eachC.desc}
-                                                          className="w-4 h-4 object-contain cursor-pointer"
-                                                          // width={24}
-                                                          // height={24}
-                                                        />
-                                                      )}
-                                                      <p className="text-sm">
-                                                        {eachC.label}
-                                                      </p>
-                                                    </div>
-                                                  </button>
+                                    >
+                                      {tooltip.child &&
+                                        tooltip.child.map((eachC) => {
+                                          const actionId2 = `${topics.id}-${eachC.id}`;
+                                          const isLoading =
+                                            loadingAction === actionId2;
+                                          return (
+                                            <button
+                                              key={eachC.id}
+                                              className={` rounded-lg transition-all duration-200  hover:shadow-md ${
+                                                isLoading
+                                                  ? "bg-gray-100 cursor-wait"
+                                                  : "bg-white hover:bg-gray-50 active:scale-95"
+                                              }`}
+                                              onClick={() => {
+                                                return handleFormatSelection(
+                                                  topics.name,
+                                                  each.topic,
+                                                  eachC.desc,
+                                                  actionId2,
+                                                  topics.id
                                                 );
-                                              })}
-                                          </div>
-                                        )}
-                                      </Fragment>
-                                    );
-                                  })}
-                                </div>
+                                              }}
+                                              disabled={isLoading}
+                                              data-tooltip-id={`tooltip-${eachC.id}`}
+                                              data-tooltip-content={eachC.desc}
+                                              aria-label={`${eachC.desc} for ${each.topic}`}
+                                            >
+                                              <div className="flex gap-2">
+                                                {isLoading ? (
+                                                  <div className="w-4 h-4 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
+                                                ) : (
+                                                  <Image
+                                                    src={eachC.pic}
+                                                    alt={eachC.desc}
+                                                    className="w-4 h-4 object-contain cursor-pointer"
+                                                    // width={24}
+                                                    // height={24}
+                                                  />
+                                                )}
+                                                <p className="text-sm">
+                                                  {eachC.label}
+                                                </p>
+                                              </div>
+                                            </button>
+                                          );
+                                        })}
+                                    </div>
+                                  )}
+                                </Fragment>
+                              );
+                            })}
+                          </div>
                         </div>
-                        
                       </Fragment>
                     );
                   })}
@@ -587,27 +596,29 @@ const UserCourse = () => {
       })}
 
       {/* Tooltips - Place outside the map to avoid duplication */}
-      {tooltipData.map((item) =>{
-        console.log(item) 
-        return <Fragment key={item.id}>
-          {item.child ? (
-            item.child.map((item) => (
+      {tooltipData.map((item) => {
+        
+        return (
+          <Fragment key={item.id}>
+            {item.child ? (
+              item.child.map((item) => (
+                <Tooltip
+                  key={`tooltip-component-${item.id}`}
+                  id={`tooltip-${item.id}`}
+                  className="text-sm bg-gray-800 text-white px-2 py-1 rounded shadow-lg z-30"
+                  place="top"
+                />
+              ))
+            ) : (
               <Tooltip
                 key={`tooltip-component-${item.id}`}
                 id={`tooltip-${item.id}`}
-                className="text-sm bg-gray-800 text-white px-2 py-1 rounded shadow-lg z-30"
+                className="text-sm bg-gray-800 text-white px-2 py-1 rounded shadow-lg"
                 place="top"
               />
-            ))
-          ) : (
-            <Tooltip
-              key={`tooltip-component-${item.id}`}
-              id={`tooltip-${item.id}`}
-              className="text-sm bg-gray-800 text-white px-2 py-1 rounded shadow-lg"
-              place="top"
-            />
-          )}
-        </Fragment>
+            )}
+          </Fragment>
+        );
       })}
     </div>
   );

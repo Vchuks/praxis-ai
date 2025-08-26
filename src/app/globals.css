@@ -73,8 +73,14 @@ pre {
 }
 
 
-@media (min-width: 700px) and (max-width: 1100px) {
-  .hh{height: 82dvh;}
+@media (min-width: 768px) and (max-width: 1100px) {
+  .hh{height: 85dvh;}
+}
+
+@media (max-width: 767px){
+  .hh{
+    height: 100%;
+  }
 }
 
  

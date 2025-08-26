@@ -1,4 +1,4 @@
-import { useResultStore } from "@/stores";
+// import { useResultStore } from "@/stores";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import CircularScoreProgress from "./scoreProgress";
@@ -27,7 +27,7 @@ type FailedType = {
 };
 
 const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
-  const { userQuestion } = useResultStore();
+  // const { userQuestion } = useResultStore();
 
   // Helper function to check if data is quiz array
   const isQuizDataArray = (
@@ -70,7 +70,7 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
     ) => {
       const statusKey = `${questionId}-${optionIndex}`;
       const isCorrect = selectedOption === correctAnswer;
-console.log(eachLink)
+
       // Clear previous answers for this question
       const newStatus = { ...answerStatus };
       Object.keys(newStatus).forEach((key) => {
@@ -306,7 +306,7 @@ console.log(eachLink)
                 {score}/{quizArray.length}
               </p>
             </div>
-            <CircularScoreProgress score={score} color="#008000" size={100} />
+            <CircularScoreProgress score={score} color="#008000" size={100} maxScore={10} />
           </div>
           <div className="pt-4 md:pt-10">
             <p className="font-bold">Answers</p>

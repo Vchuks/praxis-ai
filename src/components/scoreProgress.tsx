@@ -69,8 +69,8 @@ const CircularScoreProgress = ({
           style={{ color: textColor }}
         >
           <div className="text-2xl font-bold">
-            {Math.round(score)}
-            {showPercentage && maxScore === 100 && '%'}
+            {(Math.round(score)/maxScore) * 100}
+            {showPercentage && '%'}
             {!showPercentage && maxScore !== 100 && `/${maxScore}`}
           </div>
           

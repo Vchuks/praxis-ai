@@ -14,7 +14,7 @@ export type userMessageType = {
 
 export type UserAnswerType = {
   response_type: string;
-  data:[] | {content:string} ;
+  data:[] | {content:string, materials: {articles: []}} ;
 };
 
 type ResultType = {
@@ -24,9 +24,9 @@ type ResultType = {
   loading: boolean;
   error: string | null;
   getSessionId: () => void;
-  setUserQuestion: (data: userMessageType) => Promise<void>;
+  setUserQuestion: (data: userMessageType, isCheck: boolean) => Promise<void>;
   setUserAnswer: (data: UserAnswerType) => Promise<void>;
-  fetchAnswer: (userQst: userMessageType) => Promise<void>;
+  fetchAnswer: (userQst: userMessageType, isCheck: boolean) => Promise<void>;
 };
 
 export const useResultStore = create<ResultType>()((set, get) => ({
@@ -43,7 +43,7 @@ export const useResultStore = create<ResultType>()((set, get) => ({
     });
   },
 
-  setUserQuestion: async (userQst) => {
+  setUserQuestion: async (userQst, isCheck) => {
     // Set the question immediately
     set({ 
       userQuestion: userQst, 
@@ -54,22 +54,23 @@ export const useResultStore = create<ResultType>()((set, get) => ({
 
     // Then fetch the answer
     try {
-      await get().fetchAnswer(userQst);
+      await get().fetchAnswer(userQst, isCheck);
     } catch (error) {
       // Error is already handled in fetchAnswer
       console.error('Error in setUserQuestion:', error);
     }
   },
 
-  fetchAnswer: async (userQst) => {
+  fetchAnswer: async (userQst, isCheck) => {
     const { session_Id } = get();
     const { user } = useAuthStore.getState();
+    const getRandom = Math.floor(Math.random() * 5)
 
     
     if (!session_Id) {
       const error = "Session ID not found";
       set({ loading: false, error });
-      throw new Error(error);
+      throw new Error("Session not available");
     }
 
     const myHeaders = new Headers();
@@ -86,9 +87,10 @@ export const useResultStore = create<ResultType>()((set, get) => ({
           method: "POST",
           headers: myHeaders,
           body: JSON.stringify({
-            sessionId: `${session_Id}h`,
-            userMessage: JSON.stringify([userQst]),
-            student_email: user?.student_email
+            sessionId: `${session_Id}${getRandom}`,
+            userMessage: isCheck ? userQst.topicName: JSON.stringify([userQst]),
+            student_email: user?.student_email,
+            support_format: userQst.format
           }),
         }
       );
