@@ -31,6 +31,8 @@ const SearchBox = () => {
   
   const handleAnswer = useCallback(
     async (topicName: string, format: string, isSearch: boolean) => {
+        setSearch("")
+
       try {
         if (topicName === "") {
           return;
@@ -47,7 +49,6 @@ const SearchBox = () => {
         // Navigate to results page after data is set
         router.push("/result");
         setShowNav(false);
-        setSearch("")
       } catch (error) {
         if (error instanceof Error) {
           throw new Error(

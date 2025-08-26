@@ -263,11 +263,11 @@ const ArticleContent = ({
   items: ResponseItem[];
   question: string;
 }) => (
-  <div className={`py-4 w-full lg:w-[45rem] px-2 md:px-4 ${question !== "" ? "mt-4" : "mt-0"}`}>
+  <div className={`py-4 w-full lg:w-[40rem] xl:w-[45rem] px-2 md:px-4 ${question !== "" ? "mt-4" : "mt-0"}`}>
     {question !== "" ?<div className="bg-white p-4 rounded-t-xl mb-2">
       <h2 className="text-xl font-semibold">{question}</h2>
     </div> : null}
-    <div className="pl-6 pr-4 lg:pl-16 rounded-lg mt-4">
+    <div className=" break-words lg:wrap-normal sm:px-4 md:pl-6 md:pr-4 lg:pl-16 lg:pr-8 rounded-lg mt-4">
       {items.map((item, index) => (
         <div key={`article-${index}`} className="">
           <div className="py-3">
@@ -300,10 +300,10 @@ const GeneralContent = ({
   data: ContentData | string;
   topicName: string;
 }) => (
-  <div className="prose max-w-none bg-white rounded-lg p-6">
+  <div className="prose max-w-none break-words lg:wrap-normal bg-white rounded-lg p-6">
     {isContentData(data) ? (
       <div>
-        <p className="leading-relaxed text-gray-800 w-[40rem] px-2 md:px-6">{data.content}</p>
+        <p className="leading-relaxed text-gray-800 w-full lg:w-[38rem] xl:w-[45rem] px-2 md:px-6">{data.content}</p>
         <div>
           <ArticleContent
               items={data.materials.articles}
@@ -574,7 +574,7 @@ const ResultPage = () => {
 
   // Render main content
   return (
-    <main className="max-w-4xl mx-auto px-2 lg:px-0 py-6 space-y-6" role="main">
+    <main className="max-w-4xl mx-auto px-2 lg:px-4 xl:px-0 py-6 space-y-6" role="main">
       {/* Render conversation history */}
       {conversationHistory.map((entry, index) => (
         <ConversationEntry

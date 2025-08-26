@@ -95,10 +95,7 @@ const Header = () => {
           <Image src={menu} alt="" className="w-6 items-start" onClick={()=> setShowNav(!showNav)} />
         </div>
       </header>
-      <div className="block md:hidden bg-[#F5F6FA] w-full text-center border-b-4 border-[#F8991D] pb-2">
-        <p className="text-[#F8991D] text-lg font-semibold">Product Design</p>
-        <p className="text-xs font-light">Intro to product design</p>
-      </div>
+      
       {showNav &&
         <SmallSidebar />
         }
