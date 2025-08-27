@@ -11,8 +11,8 @@ const SmallSidebar: React.FC = () => {
   const getName = user?.student_name.split(" ") 
 
   return (
-    <section className="w-full block md:hidden bg-[#00000024] fixed top-0 h-[98svh] z-10 ">
-    <aside className=" w-[20rem] h-screen absolute top-0 bg-white border border-[#EAEAEA] rounded-l-4xl">
+    <section className="w-full block md:hidden bg-[#00000024] fixed top-0 h-full z-10 ">
+    <aside className=" w-[20rem] h-full absolute top-0 bg-white border border-[#EAEAEA] rounded-l-4xl">
       <div className="w-full bg-white p-4 rounded-tl-4xl flex justify-between items-center">
         <div className="flex items-center gap-3 ">
           <p className="rounded-full p-2 bg-[#222057] text-sm text-white font-medium">

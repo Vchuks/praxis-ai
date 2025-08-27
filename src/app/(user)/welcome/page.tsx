@@ -38,7 +38,7 @@ const WelcomePage = () => {
   return (
     <div className="flex flex-col justify-between pb-4 md:pb-0">
       <div
-        className={`w-full transition-all duration-1000 ease-in-out  lg:w-3/4 flex flex-col m-auto py-6 items-center pt-14 md:pt-0 ${
+        className={`w-full transition-all duration-1000 ease-in-out  lg:w-3/4 flex flex-col m-auto py-6 items-center pt-8 sm:pt-14 md:pt-0 ${
           animate
             ? "transform translate-y-0 scale-100"
             : "transform -translate-y-full scale-70"
