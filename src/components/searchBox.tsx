@@ -2,8 +2,9 @@
 import { useCallback, useRef, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/16/solid";
 import quiz from "../../public/assets/quiz.png";
-import searchLogo from "../../public/assets/global-search.png";
+import searchLogo from "../../public/assets/books.png";
 import faq from "../../public/assets/faq.png";
+import chat from "../../public/assets/chat.png";
 import Image from "next/image";
 import { useResultStore, useSmallNavStore } from "@/stores";
 import { useRouter } from "next/navigation";
@@ -67,7 +68,7 @@ const SearchBox = () => {
           value={search}
           placeholder="Chat with Praxis"
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pt-1 outline-0 bg-white"
+          className="w-full text-sm md:pt-1 outline-0 bg-white"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -85,8 +86,8 @@ const SearchBox = () => {
             <p className="text-sm text-gray-700">{selectedFile.name}</p>
           </div>
         )}
-        <div className="w-full flex justify-between items-center">
-          <div className="pt-2 md:pt-4 font-light flex gap-4">
+        <div className="w-full flex justify-between items-end">
+          <div className="pt-2 md:pt-4 font-light flex gap-2 lg:gap-4">
             <button
               onClick={triggerFileInput}
               className="flex items-center justify-center cursor-pointer rounded-full transition-colors"
@@ -147,8 +148,8 @@ const SearchBox = () => {
                 alt=""
                 className="w-3 md:w-4 items-start"
               />
-              <p className="flex gap-1">
-                General <span className="hidden lg:block">Study</span>
+              <p className="">
+                Resources
               </p>
             </div>
             <div
@@ -176,23 +177,11 @@ const SearchBox = () => {
               <p>FAQs</p>
             </div>
           </div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-5 md:size-5 cursor-pointer"
-            onClick={() => {
+          
+              <Image src={chat} alt="" className="w-4 md:w-6 items-start" onClick={() => {
               handleAnswer(search, "article", true);
-            }}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-            />
-          </svg>
+            }} />
+
 
           {/* <svg
             xmlns="http://www.w3.org/2000/svg"

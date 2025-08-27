@@ -8,7 +8,7 @@ import Link from "next/link";
 const Sidebar = () => {
   
   return (
-    <aside className="w-[20rem] bg-white border border-[#EAEAEA] ">
+    <aside className="w-[20rem] h-[98lvh] flex flex-col justify-between border border-[#EAEAEA] ">
       <div className="w-full sticky z-10 top-0 bg-white">
         <div className="w-44 m-auto pt-6 pb-5">
           <Image src={logo} alt="" className="w-full" />
@@ -16,7 +16,7 @@ const Sidebar = () => {
           {/* <p className="font-light text-xs text-center">(Ai Tutor)</p> */}
         </div>
       </div>
-      <div className="hh overflow-y-auto no-scrollbar">
+      <div className="inh overflow-y-auto no-scrollbar">
         <UserCourse />
       </div>
       <div className="w-full bg-white sticky bottom-0 px-4 py-3">

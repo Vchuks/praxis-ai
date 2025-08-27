@@ -52,7 +52,7 @@ const UserCourse = () => {
           id: 3,
           pic: article,
           desc: "article",
-          label: "General Study",
+          label: "Resources",
         },
         {
           id: 4,

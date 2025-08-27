@@ -303,18 +303,13 @@ const GeneralContent = ({
   topicName: string;
 }) => {
   const markdown = isContentData(data) ? data.content : data
-  return <div className="prose max-w-none break-words lg:wrap-normal bg-white rounded-lg p-6">
+  return <div className="prose max-w-none break-words lg:wrap-normal bg-white rounded-lg p-4 md:p-6">
     {isContentData(data) ? (
       <div>
-        <p className="leading-relaxed text-gray-800 w-full lg:w-[38rem] xl:w-[45rem] px-2 md:px-6">
+        <div className="leading-relaxed text-gray-800 w-full lg:w-[38rem] xl:w-[45rem] px-2 md:px-6">
           <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
-        </p>
-        <div>
-          <ArticleContent
-              items={data.materials.articles}
-              question=""
-            />
         </div>
+        
       </div>
     ) : (
       <p className="text-gray-700 leading-relaxed">

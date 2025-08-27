@@ -93,7 +93,7 @@ const Login = () => {
 
   
   return (
-    <div className="bg-wrapper flex items-center h-full lg:min-h-screen">
+    <div className="bg-wrapper flex items-center h-full">
       <div className="inh hidden md:block w-full md:pt-20 pb-4 lg:pt-10">
         <div className="relative w-full h-11/12 lg:h-[99%]">
           {welcomePack.map((each) => {
@@ -253,7 +253,7 @@ const Login = () => {
       </div>
 
       <div className="w-full md:bg-white inh flex items-center">
-        <div className="w-11/12 md:w-full lg:w-10/12 bg-white m-auto px-6 pt-8 pb-8 md:mt-20 lg:mt-0 lg:p-14 rounded-2xl transform hover:shadow-2xl transition-all duration-300">
+        <div className="w-11/12 md:w-full lg:w-10/12 bg-white m-auto px-6 pt-8 pb-8 md:mt-20 lg:mt-8 xl:mt-auto 2xl:mt-20 lg:p-14 rounded-2xl transform hover:shadow-2xl transition-all duration-300">
           <h2 className="w-fit font-inter m-auto py-2 bg-clip-text text-transparent bg-gradient-to-br from-[#222057] to-[#F8991D] to-80% font-[900] text-2xl md:text-4xl text-center animate-pulse">
             Welcome Back!
           </h2>

@@ -99,13 +99,13 @@ if (!isAuthenticated || !user) {
 
   // Authenticated user layout
   return (
-    <div className="flex max-h-screen font-poppins w-full">
+    <div className="flex max-h-screen  font-poppins w-full">
       <div className="hidden md:block">
         <Sidebar />
       </div>
-      <div className="w-full inh overflow-y-auto flex flex-col justify-between">
+      <div className="w-full inh md:overflow-x-hidden overflow-y-auto flex flex-col justify-between">
         <Header />
-        <div className="w-full px-4 md:px-0 ">
+        <div className="w-full px-4 md:px-0">
           {children}
         </div>
         {pathname !== "/welcome" && (
