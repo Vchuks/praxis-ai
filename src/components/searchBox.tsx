@@ -27,11 +27,10 @@ const SearchBox = () => {
   const [search, setSearch] = useState<string>("");
   const { setShowNav } = useSmallNavStore();
   const { setUserQuestion, userQuestion } = useResultStore();
-  
-  
+
   const handleAnswer = useCallback(
     async (topicName: string, format: string, isSearch: boolean) => {
-        setSearch("")
+      setSearch("");
 
       try {
         if (topicName === "") {
@@ -66,13 +65,14 @@ const SearchBox = () => {
           type="search"
           name="searchAll"
           value={search}
+          placeholder="Chat with Praxis"
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pt-1 outline-0 bg-white"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
               handleAnswer(search, "article", true);
-              }
+            }
           }}
           role="button"
         />
@@ -85,7 +85,7 @@ const SearchBox = () => {
             <p className="text-sm text-gray-700">{selectedFile.name}</p>
           </div>
         )}
-        <div className="w-full flex justify-between items-end">
+        <div className="w-full flex justify-between items-center">
           <div className="pt-2 md:pt-4 font-light flex gap-4">
             <button
               onClick={triggerFileInput}
@@ -109,7 +109,11 @@ const SearchBox = () => {
               accept="image/*,application/pdf,.doc,.docx"
             />
             <div
-              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${userQuestion?.format === "video" ? " py-1 px-2 rounded-md shadow-md" : "border-0"}`}
+              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${
+                userQuestion?.format === "video"
+                  ? " py-1 px-2 rounded-md shadow-md"
+                  : "border-0"
+              }`}
               onClick={() => handleAnswer(search, "video", false)}
             >
               <svg
@@ -131,7 +135,11 @@ const SearchBox = () => {
               </p>
             </div>
             <div
-              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${userQuestion?.format === "article" ? "shadow-md py-1 px-2 rounded-md " : "border-0"}`}
+              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${
+                userQuestion?.format === "article"
+                  ? "shadow-md py-1 px-2 rounded-md "
+                  : "border-0"
+              }`}
               onClick={() => handleAnswer(search, "article", false)}
             >
               <Image
@@ -139,10 +147,16 @@ const SearchBox = () => {
                 alt=""
                 className="w-3 md:w-4 items-start"
               />
-              <p className="flex gap-1">General <span className="hidden lg:block">Study</span></p>
+              <p className="flex gap-1">
+                General <span className="hidden lg:block">Study</span>
+              </p>
             </div>
             <div
-              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${userQuestion?.format === "quiz" ? " py-1 px-2 rounded-md shadow-md" : "border-0"}`}
+              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${
+                userQuestion?.format === "quiz"
+                  ? " py-1 px-2 rounded-md shadow-md"
+                  : "border-0"
+              }`}
               onClick={() => handleAnswer(search, "quiz", false)}
             >
               <Image src={quiz} alt="" className="w-2 md:w-3 items-start" />
@@ -150,7 +164,11 @@ const SearchBox = () => {
               <p>Quiz</p>
             </div>
             <div
-              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${userQuestion?.format === "faq" ? " py-1 px-2 rounded-md shadow-md " : "border-0"}`}
+              className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${
+                userQuestion?.format === "faq"
+                  ? " py-1 px-2 rounded-md shadow-md "
+                  : "border-0"
+              }`}
               onClick={() => handleAnswer(search, "faq", false)}
             >
               <Image src={faq} alt="" className="w-2 md:w-4 items-start" />
@@ -158,8 +176,25 @@ const SearchBox = () => {
               <p>FAQs</p>
             </div>
           </div>
-
           <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-5 md:size-5 cursor-pointer"
+            onClick={() => {
+              handleAnswer(search, "article", true);
+            }}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+            />
+          </svg>
+
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -175,7 +210,7 @@ const SearchBox = () => {
               strokeLinejoin="round"
               d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
             />
-          </svg>
+          </svg> */}
         </div>
       </div>
     </div>

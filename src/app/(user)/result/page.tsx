@@ -14,6 +14,8 @@ import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import logo from "../../../../public/assets/vlogo.png";
 import Link from "next/link";
 import Quiz, { QuizDataObject } from "@/components/quiz";
+import Markdown from "react-markdown";
+import remarkGfm from 'remark-gfm'
 
 // Enhanced type definitions
 export interface ResponseItem {
@@ -299,11 +301,14 @@ const GeneralContent = ({
 }: {
   data: ContentData | string;
   topicName: string;
-}) => (
-  <div className="prose max-w-none break-words lg:wrap-normal bg-white rounded-lg p-6">
+}) => {
+  const markdown = isContentData(data) ? data.content : data
+  return <div className="prose max-w-none break-words lg:wrap-normal bg-white rounded-lg p-6">
     {isContentData(data) ? (
       <div>
-        <p className="leading-relaxed text-gray-800 w-full lg:w-[38rem] xl:w-[45rem] px-2 md:px-6">{data.content}</p>
+        <p className="leading-relaxed text-gray-800 w-full lg:w-[38rem] xl:w-[45rem] px-2 md:px-6">
+          <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
+        </p>
         <div>
           <ArticleContent
               items={data.materials.articles}
@@ -317,7 +322,7 @@ const GeneralContent = ({
       </p>
     )}
   </div>
-);
+};
 
 // Component for rendering a single conversation entry
 const ConversationEntry = ({

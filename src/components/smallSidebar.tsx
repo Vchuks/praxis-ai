@@ -6,7 +6,7 @@ import { useAuthStore, useSmallNavStore } from "@/stores";
 import Link from "next/link";
 
 const SmallSidebar: React.FC = () => {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const {setShowNav} = useSmallNavStore()
   const getName = user?.student_name.split(" ") 
 
@@ -31,13 +31,13 @@ const SmallSidebar: React.FC = () => {
         </div>
         <Image src={closeicon} alt="" className="w-7" onClick={()=> setShowNav(false)} />
       </div>
-      <div className="h-full overflow-y-auto pb-40 sm:pb-2">
+      <div className="h-full hh overflow-y-auto pb-40 sm:pb-2">
         <UserCourse />
       </div>
       <div className="w-full bg-white sticky bottom-0 px-4 pt-3 pb-4">
         <div className="bg-gradient-to-r from-[#222057] to-[#F8991D] p-[2px] rounded-[30px]">
           <Link href="https://pluralcode.academy/portal/dashboard.html">
-          <div className="bg-white w-full text-center h-12 flex justify-center items-center rounded-[30px] gap-5">
+          <div className="bg-white w-full text-center h-12 flex justify-center items-center rounded-[30px] gap-5" onClick={logout}>
             <p className="bg-clip-text text-transparent bg-gradient-to-r from-[#222057] to-[#F8991D] font-semibold text-sm ">
               Back to Dashboard
             </p>

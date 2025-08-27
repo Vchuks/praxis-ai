@@ -49,7 +49,7 @@ const WelcomePage = () => {
           Hello, <span>{getName && getName?.length > 1 ? getName[0] : "Martin"}</span>
         </h2>
       </div>
-      <div className="pt-4 md:pb-8 mt-14  lg:mt-0 xl:mt-20">
+      <div className="pt-4 md:pb-8 md:mt-14  lg:mt-0 xl:mt-20">
         <div className="w-full md:w-11/12 xl:w-[48rem] m-auto md:mt-30 lg:mt-0  bg-white rounded-lg md:rounded-2xl p-4 py-6  md:p-6 mb-10 md:mb-24 lg:mb-5">
           <h3 className="text-sm md:text-xl font-semibold">
             Welcome to{" "}

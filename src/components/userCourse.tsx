@@ -4,7 +4,7 @@ import article from "../../public/assets/global-search.png";
 import ask from "../../public/assets/quiz.png";
 import dots from "../../public/assets/dots.png";
 import faq from "../../public/assets/faq.png";
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { Tooltip } from "react-tooltip";
 import { useCourseStore, useResultStore, useSmallNavStore } from "@/stores";
@@ -33,7 +33,7 @@ type CourseType = {
 const UserCourse = () => {
   const { userCourses, sandbox } = useCourseStore();
   const { setUserQuestion } = useResultStore();
-  const { setShowNav } = useSmallNavStore();
+  const { showNav, setShowNav } = useSmallNavStore();
 
   const tooltipData = [
     {
@@ -79,6 +79,36 @@ const UserCourse = () => {
   const [openSmall2, setOpenSmall2] = useState<string | null>(null);
 
   const router = useRouter();
+  const dotsRef = useRef<HTMLDivElement>(null)
+  const dotsRef2 = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dotsRef.current && !dotsRef.current.contains(event.target as Node)) {
+        setOpenSmall(null);
+      }
+    };
+    const handleClickOutside2 = (event: MouseEvent) => {
+      if (dotsRef2.current && !dotsRef2.current.contains(event.target as Node)) {
+        setOpenSmall2(null);
+      }
+    };
+
+    // Only add listener when dropdown is open
+    if (openSmall) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    if (openSmall2) {
+      document.addEventListener('mousedown', handleClickOutside2);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside2);
+    };
+  }, [openSmall, openSmall2]);
+
+
   useMemo(() => {
     setCourseDropdown(userCourses[0]?.course_code);
   }, [userCourses]);
@@ -132,6 +162,9 @@ const UserCourse = () => {
       actionId: string,
       subId: string
     ) => {
+      if (showNav) {
+        setShowNav(false);
+      }
       try {
         setLoadingAction(actionId);
         setSubTID(subId);
@@ -142,7 +175,7 @@ const UserCourse = () => {
           format: format,
         };
 
-        const getD = format === "article"? true : false
+        const getD = format === "article" ? true : false;
         // Set the user question and wait for completion
         await setUserQuestion(questionData, getD);
 
@@ -160,7 +193,7 @@ const UserCourse = () => {
         setOpenSmall(null);
       }
     },
-    [setUserQuestion, router, setShowNav, sandID]
+    [setUserQuestion, router, setShowNav,showNav, sandID]
   );
 
   const handleTools = (id: string) => {
@@ -282,7 +315,7 @@ const UserCourse = () => {
                                 >
                                   {subT.name}
                                 </p>
-                                <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end">
+                                <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end" ref={dotsRef}>
                                   {tooltipData.map((tooltip) => {
                                     const actionId = `${subT.id}-${tooltip.id}`;
                                     const isLoading =
@@ -452,14 +485,14 @@ const UserCourse = () => {
                           className={`flex items-center w-full justify-between py-3 cursor-pointer hover:bg-gray-50 rounded transition-colors duration-200
                           
                           `}
-                          onClick={()=>{
+                          onClick={() => {
                             return handleFormatSelection(
-                                            topics.name,
-                                            each.topic,
-                                            "video",
-                                            topics.id,
-                                            topics.id
-                                          )
+                              topics.name,
+                              each.topic,
+                              "video",
+                              topics.id,
+                              topics.id
+                            );
                           }}
                           role="button"
                           aria-expanded={sandboxSubTopicDropdown === topics.id}
@@ -474,7 +507,7 @@ const UserCourse = () => {
                           <p className="text-sm w-full truncate font-medium text-gray-600">
                             {topics.name}
                           </p>
-                          <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end">
+                          <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end" ref={dotsRef2}>
                             {tooltipData.map((tooltip) => {
                               const actionId = `${topics.id}-${tooltip.id}`;
                               const isLoading = loadingAction === actionId;
@@ -597,7 +630,6 @@ const UserCourse = () => {
 
       {/* Tooltips - Place outside the map to avoid duplication */}
       {tooltipData.map((item) => {
-        
         return (
           <Fragment key={item.id}>
             {item.child ? (

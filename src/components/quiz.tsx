@@ -159,7 +159,7 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
       return (
         <div className="font-extrabold text-sm flex gap-2 mt-2">
           <CheckIcon className="w-5 text-[#296A3F]" />
-          <p className="text-[#296A3F]">That&apos;s right!</p>
+          <p className="text-[#296A3F]">Correct answer!</p>
         </div>
       );
     } else if (status === "incorrect") {
