@@ -31,7 +31,7 @@ body {
 }
 
 .bg-wrapper{
-  height: 100lvh;
+  height: 100svh;
   width: 100%;
   background-image: url("./../../public/assets/bg.png");
   background-size: cover;
@@ -67,7 +67,7 @@ pre {
   text-overflow: ellipsis; /* While -webkit-line-clamp handles the ellipsis, it's good practice to include this for clarity. */
 
 }
-.hh{height: 100lvh;}
+.hh{height: 100svh;}
 .inh{
   height: inherit;
 }
