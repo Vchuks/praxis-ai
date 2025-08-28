@@ -32,7 +32,7 @@ const SmallSidebar: React.FC = () => {
         </div>
         <Image src={closeicon} alt="" className="w-7" onClick={()=> setShowNav(false)} />
       </div>
-      <div className="in  overflow-y-auto pb-40 sm:pb-2">
+      <div className="inh overflow-y-auto pb-40 sm:pb-2">
         <UserCourse />
       </div>
       <div className="w-full bg-white sticky bottom-0 px-4 pt-3 pb-4">

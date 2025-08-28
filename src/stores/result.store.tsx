@@ -64,7 +64,7 @@ export const useResultStore = create<ResultType>()((set, get) => ({
   fetchAnswer: async (userQst, isCheck) => {
     const { session_Id } = get();
     const { user } = useAuthStore.getState();
-    const getRandom = Math.floor(Math.random() * 5)
+    const getRandom = isCheck ? "chat" : Math.floor(Math.random() * 5)
 
     
     if (!session_Id) {
@@ -89,8 +89,7 @@ export const useResultStore = create<ResultType>()((set, get) => ({
           body: JSON.stringify({
             sessionId: `${session_Id}${getRandom}`,
             userMessage: isCheck ? userQst.topicName: JSON.stringify([userQst]),
-            student_email: user?.student_email,
-            support_format: userQst.format
+            student_email: user?.student_email
           }),
         }
       );

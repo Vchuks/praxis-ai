@@ -99,7 +99,7 @@ if (!isAuthenticated || !user) {
 
   // Authenticated user layout
   return (
-    <div className="flex max-h-screen   font-poppins w-full">
+    <div className="flex max-h-svh font-poppins w-full">
       <div className="hidden md:block">
         <Sidebar />
       </div>

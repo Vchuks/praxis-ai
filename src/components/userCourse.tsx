@@ -1,6 +1,6 @@
 import Image from "next/image";
 import cam from "../../public/assets/cam.png";
-import article from "../../public/assets/global-search.png";
+import article from "../../public/assets/books.png";
 import ask from "../../public/assets/quiz.png";
 import dots from "../../public/assets/dots.png";
 import faq from "../../public/assets/faq.png";

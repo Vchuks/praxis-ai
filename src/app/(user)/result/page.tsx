@@ -15,7 +15,7 @@ import logo from "../../../../public/assets/vlogo.png";
 import Link from "next/link";
 import Quiz, { QuizDataObject } from "@/components/quiz";
 import Markdown from "react-markdown";
-import remarkGfm from 'remark-gfm'
+import remarkGfm from "remark-gfm";
 
 // Enhanced type definitions
 export interface ResponseItem {
@@ -265,10 +265,16 @@ const ArticleContent = ({
   items: ResponseItem[];
   question: string;
 }) => (
-  <div className={`py-4 w-full lg:w-[40rem] xl:w-[45rem] px-2 md:px-4 ${question !== "" ? "mt-4" : "mt-0"}`}>
-    {question !== "" ?<div className="bg-white p-4 rounded-t-xl mb-2">
-      <h2 className="text-xl font-semibold">{question}</h2>
-    </div> : null}
+  <div
+    className={`py-4 w-full lg:w-[40rem] xl:w-[45rem] px-2 md:px-4 ${
+      question !== "" ? "mt-4" : "mt-0"
+    }`}
+  >
+    {question !== "" ? (
+      <div className="bg-white p-4 rounded-t-xl mb-2">
+        <h2 className="text-xl font-semibold">{question}</h2>
+      </div>
+    ) : null}
     <div className=" break-words lg:wrap-normal sm:px-4 md:pl-6 md:pr-4 lg:pl-16 lg:pr-8 rounded-lg mt-4">
       {items.map((item, index) => (
         <div key={`article-${index}`} className="">
@@ -297,26 +303,23 @@ const ArticleContent = ({
 
 // Component for rendering general content
 const GeneralContent = ({
-  data
+  data,
 }: {
   data: ContentData | string;
   topicName: string;
 }) => {
-  const markdown = isContentData(data) ? data.content : data
-  return <div className="prose max-w-none break-words lg:wrap-normal bg-white rounded-lg p-4 md:p-6">
-    {isContentData(data) ? (
-      <div>
-        <div className="leading-relaxed text-gray-800 w-full lg:w-[38rem] xl:w-[45rem] px-2 md:px-6">
-          <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
+  const markdown = isContentData(data) ? data.content : data;
+  return (
+    <div >
+      {isContentData(data) && (
+        <div className="prose max-w-none break-words lg:wrap-normal bg-white rounded-lg p-2 md:p-6">
+          <div className="leading-relaxed text-gray-800 w-full lg:w-[38rem] xl:w-[45rem] px-2 md:px-6">
+            <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
+          </div>
         </div>
-        
-      </div>
-    ) : (
-      <p className="text-gray-700 leading-relaxed">
-        {typeof data === "string" ? data : JSON.stringify(data, null, 2)}
-      </p>
-    )}
-  </div>
+      )}
+    </div>
+  );
 };
 
 // Component for rendering a single conversation entry
@@ -373,12 +376,31 @@ const ConversationEntry = ({
 
         {entry.format === "quiz" && <QuizContent userAnswer={entry.answer} />}
 
-        {entry.format === "article" &&
+        {entry.format === "" &&
           (isContentData(entry.answer.data) ||
             typeof entry.answer.data === "object") && (
             <GeneralContent
               data={entry.answer.data as ContentData | string}
               topicName={topicName}
+            />
+          )}
+        {entry.format === "" && entry.question.includes("quiz") && (
+          <QuizContent userAnswer={entry.answer} />
+        )}
+        {entry.format === "" &&
+          entry.question.includes("video") &&
+          isResponseItemArray(entry.answer.data) && (
+            <VideoContent items={entry.answer.data} topicName={topicName} />
+          )}
+        {entry.format === "" &&
+          entry.question.includes("faq") &&
+          renderFaqContent(entry, subTID, handleFaqDropdown)}
+        {entry.format === "" &&
+          entry.question.includes("article") &&
+          isResponseItemArray(entry.answer.data) && (
+            <ArticleContent
+              items={entry.answer.data}
+              question={entry.question}
             />
           )}
 
@@ -457,35 +479,31 @@ const ResultPage = () => {
   >([]);
   const router = useRouter();
 
-  
   const bottomRef = useRef<HTMLDivElement>(null);
-  // const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Improved scroll to bottom function
-  const scrollToBottom = useCallback(() => {
-    if (bottomRef.current) {
-      // Clear any existing timeout
+  const scrollToBottom = useCallback((force = false) => {
+    if (!bottomRef.current || (!force)) return;
 
-      // Use multiple approaches to ensure reliable scrolling
-      const scrollElement = bottomRef.current;
-
-      // Method 1: Direct scrollIntoView
-      scrollElement.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
-
-      // Method 2: Backup scroll after a delay to handle dynamic content
-      // scrollTimeoutRef.current = setTimeout(() => {
-      //   scrollElement.scrollIntoView({
-      //     behavior: "smooth",
-      //     block: "end",
-      //     inline: "nearest",
-      //   });
-      // }, 100);
+    // Clear any existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
     }
+
+    // Wait for all content (images, markdown, etc.) to load
+    scrollTimeoutRef.current = setTimeout(() => {
+      if (bottomRef.current && force) {
+        bottomRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+          inline: "nearest",
+        });
+      }
+    }, 1000); // Single scroll after 1 second
+
   }, []);
+
 
   // Load conversation history from sessionStorage on component mount
   useMemo(() => {
@@ -494,14 +512,6 @@ const ResultPage = () => {
     );
     setConversationHistory(savedHistory);
 
-    // Scroll to bottom after loading history
-    // if (savedHistory.length > 0) {
-    //   // Use requestAnimationFrame to ensure DOM is ready
-    //   requestAnimationFrame(() => {
-    //     scrollToBottom();
-    //   });
-    // }
-    // setTimeout(() => scrollToBottom(), 600);
   }, []);
 
   // Save conversation history to sessionStorage whenever it changes
@@ -521,6 +531,7 @@ const ResultPage = () => {
 
   // Add new conversation entry when answer arrives and scroll to bottom
   useEffect(() => {
+
     if (userAnswer && userQuestion?.course_topic) {
       const newEntry: ConversationEntry = {
         id: generateId(),
@@ -535,24 +546,30 @@ const ResultPage = () => {
         return updated.slice(-20);
       });
 
-      setTimeout(() => scrollToBottom(), 600);
+      
     }
   }, [
     userAnswer,
     userQuestion?.course_topic,
     userQuestion?.format,
-    generateId,
-    scrollToBottom,
+    generateId
   ]);
 
-  // Cleanup timeout on unmount
-  // useEffect(() => {
-  //   return () => {
-  //     if (scrollTimeoutRef.current) {
-  //       clearTimeout(scrollTimeoutRef.current);
-  //     }
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (!loading && conversationHistory.length > 0) {
+      setTimeout(() => scrollToBottom(true), 600); // Single scroll when loading finishes
+    }
+  }, [loading, conversationHistory.length, scrollToBottom]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Event handlers
   const handleRetry = () => {
     window.location.reload();
@@ -574,7 +591,10 @@ const ResultPage = () => {
 
   // Render main content
   return (
-    <main className="max-w-4xl mx-auto px-2 lg:px-4 xl:px-0 py-6 space-y-6" role="main">
+    <main
+      className="max-w-4xl mx-auto px-2 lg:px-4 xl:px-0 py-6 space-y-6"
+      role="main"
+    >
       {/* Render conversation history */}
       {conversationHistory.map((entry, index) => (
         <ConversationEntry

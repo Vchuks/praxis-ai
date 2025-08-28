@@ -36,7 +36,7 @@ const WelcomePage = () => {
 
   const getName = user?.student_name.split(" ")
   return (
-    <div className="flex flex-col justify-between pb-4 md:pb-0">
+    <div className="flex min-h-[90svh] lg:min-h-[85svh] flex-col justify-between pb-4 md:pb-0">
       <div
         className={`w-full transition-all duration-1000 ease-in-out  lg:w-3/4 flex flex-col m-auto py-6 items-center pt-8 sm:pt-14 md:pt-0 ${
           animate
@@ -49,8 +49,8 @@ const WelcomePage = () => {
           Hello, <span>{getName && getName?.length > 1 ? getName[0] : "Martin"}</span>
         </h2>
       </div>
-      <div className="pt-4 md:pb-8 md:mt-14  lg:mt-0 xl:mt-20">
-        <div className="w-full md:w-11/12 xl:w-[48rem] m-auto md:mt-30 lg:mt-0  bg-white rounded-lg md:rounded-2xl p-4 py-6  md:p-6 mb-10 md:mb-24 lg:mb-5">
+      <div className="pt-4 md:pb-8 md:mt-14 md:mb-20 lg:mb-0  lg:mt-0 xl:mt-14">
+        <div className="w-full md:w-11/12 xl:w-[48rem] m-auto md:mt-20 lg:mt-0  bg-white rounded-lg md:rounded-2xl p-4 py-6  md:p-6 mb-10 md:mb-24 lg:mb-5 2xl:mb-14">
           <h3 className="text-sm md:text-xl font-semibold">
             Welcome to{" "}
             <span className="bg-clip-text py-4 text-transparent bg-gradient-to-b from-[#222057]  to-[#F8991D] ">

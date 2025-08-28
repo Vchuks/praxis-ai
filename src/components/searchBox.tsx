@@ -1,9 +1,9 @@
 "use client";
 import { useCallback, useRef, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/16/solid";
-import quiz from "../../public/assets/quiz.png";
-import searchLogo from "../../public/assets/books.png";
-import faq from "../../public/assets/faq.png";
+// import quiz from "../../public/assets/quiz.png";
+// import searchLogo from "../../public/assets/books.png";
+// import faq from "../../public/assets/faq.png";
 import chat from "../../public/assets/chat.png";
 import Image from "next/image";
 import { useResultStore, useSmallNavStore } from "@/stores";
@@ -27,10 +27,10 @@ const SearchBox = () => {
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
   const { setShowNav } = useSmallNavStore();
-  const { setUserQuestion, userQuestion } = useResultStore();
+  const { setUserQuestion, loading } = useResultStore();
 
   const handleAnswer = useCallback(
-    async (topicName: string, format: string, isSearch: boolean) => {
+    async (topicName: string, isSearch: boolean) => {
       setSearch("");
 
       try {
@@ -40,7 +40,7 @@ const SearchBox = () => {
         const questionData = {
           topicName: topicName,
           course_topic: `${topicName}`,
-          format: format,
+          format: "",
         };
 
         // Set the user question and wait for completion
@@ -72,7 +72,7 @@ const SearchBox = () => {
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              handleAnswer(search, "article", true);
+              handleAnswer(search, true);
             }
           }}
           role="button"
@@ -109,13 +109,13 @@ const SearchBox = () => {
               className="hidden"
               accept="image/*,application/pdf,.doc,.docx"
             />
-            <div
+            {/* <div
               className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${
                 userQuestion?.format === "video"
                   ? " py-1 px-2 rounded-md shadow-md"
                   : "border-0"
               }`}
-              onClick={() => handleAnswer(search, "video", false)}
+              onClick={() => handleAnswer(search, false)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -131,9 +131,7 @@ const SearchBox = () => {
                   d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
                 />
               </svg>
-              <p className="flex gap-1">
-                Video <span className="hidden lg:block">Research</span>
-              </p>
+              <p className="flex gap-1">Video</p>
             </div>
             <div
               className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${
@@ -141,16 +139,14 @@ const SearchBox = () => {
                   ? "shadow-md py-1 px-2 rounded-md "
                   : "border-0"
               }`}
-              onClick={() => handleAnswer(search, "article", false)}
+              onClick={() => handleAnswer(search, false)}
             >
               <Image
                 src={searchLogo}
                 alt=""
                 className="w-3 md:w-4 items-start"
               />
-              <p className="">
-                Resources
-              </p>
+              <p className="">Resources</p>
             </div>
             <div
               className={`flex items-center gap-1 md:gap-2 text-[10px] sm:text-xs md:text-base cursor-pointer ${
@@ -158,7 +154,7 @@ const SearchBox = () => {
                   ? " py-1 px-2 rounded-md shadow-md"
                   : "border-0"
               }`}
-              onClick={() => handleAnswer(search, "quiz", false)}
+              onClick={() => handleAnswer(search, false)}
             >
               <Image src={quiz} alt="" className="w-2 md:w-3 items-start" />
 
@@ -170,18 +166,23 @@ const SearchBox = () => {
                   ? " py-1 px-2 rounded-md shadow-md "
                   : "border-0"
               }`}
-              onClick={() => handleAnswer(search, "faq", false)}
+              onClick={() => handleAnswer(search, false)}
             >
               <Image src={faq} alt="" className="w-2 md:w-4 items-start" />
 
               <p>FAQs</p>
-            </div>
+            </div> */}
           </div>
-          
-              <Image src={chat} alt="" className="w-4 md:w-6 items-start" onClick={() => {
-              handleAnswer(search, "article", true);
-            }} />
-
+{loading ?<div className="w-6 h-6 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
+                                            : 
+          <Image
+            src={chat}
+            alt=""
+            className="w-4 md:w-6 items-start"
+            onClick={() => {
+              handleAnswer(search, true);
+            }}
+          />}
 
           {/* <svg
             xmlns="http://www.w3.org/2000/svg"
