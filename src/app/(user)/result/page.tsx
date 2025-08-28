@@ -384,19 +384,19 @@ const ConversationEntry = ({
               topicName={topicName}
             />
           )}
-        {entry.format === "" && entry.question.includes("quiz") && (
+        {entry.format === "" && entry.question.toLowerCase().includes("quiz") && (
           <QuizContent userAnswer={entry.answer} />
         )}
         {entry.format === "" &&
-          entry.question.includes("video") &&
+          entry.question.toLowerCase().includes("video") &&
           isResponseItemArray(entry.answer.data) && (
             <VideoContent items={entry.answer.data} topicName={topicName} />
           )}
         {entry.format === "" &&
-          entry.question.includes("faq") &&
+          entry.question.toLowerCase().includes("faq") &&
           renderFaqContent(entry, subTID, handleFaqDropdown)}
         {entry.format === "" &&
-          entry.question.includes("article") &&
+          entry.question.toLowerCase().includes("article") &&
           isResponseItemArray(entry.answer.data) && (
             <ArticleContent
               items={entry.answer.data}

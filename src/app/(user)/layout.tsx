@@ -99,11 +99,11 @@ if (!isAuthenticated || !user) {
 
   // Authenticated user layout
   return (
-    <div className="flex max-h-svh font-poppins w-full">
+    <div className="flex max-h-dvh font-poppins w-full">
       <div className="hidden md:block">
         <Sidebar />
       </div>
-      <div className="w-full h-svh md:overflow-x-hidden overflow-y-auto flex flex-col justify-between">
+      <div className="w-full h-dvh md:overflow-x-hidden overflow-y-auto flex flex-col justify-between">
         <Header />
         <div className="w-full px-4 md:px-0">
           {children}

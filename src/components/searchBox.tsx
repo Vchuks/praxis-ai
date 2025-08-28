@@ -173,16 +173,18 @@ const SearchBox = () => {
               <p>FAQs</p>
             </div> */}
           </div>
-{loading ?<div className="w-6 h-6 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
-                                            : 
-          <Image
-            src={chat}
-            alt=""
-            className="w-4 md:w-6 items-start"
-            onClick={() => {
-              handleAnswer(search, true);
-            }}
-          />}
+          {loading ? (
+            <div className="w-6 h-6 animate-spin rounded-full border-2 border-[#F8991D] border-t-transparent" />
+          ) : (
+            <Image
+              src={chat}
+              alt=""
+              className="w-4 md:w-6 items-start"
+              onClick={() => {
+                handleAnswer(search, true);
+              }}
+            />
+          )}
 
           {/* <svg
             xmlns="http://www.w3.org/2000/svg"

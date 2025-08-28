@@ -8,7 +8,7 @@ import Link from "next/link";
 const Sidebar = () => {
   
   return (
-    <aside className="w-[20rem] h-[98svh] flex flex-col justify-between border border-[#EAEAEA] ">
+    <aside className="w-[20rem] h-[98dvh] flex flex-col justify-between border border-[#EAEAEA] ">
       <div className="w-full sticky z-10 top-0 bg-white">
         <div className="w-44 m-auto pt-6 pb-5">
           <Image src={logo} alt="" className="w-full" />

@@ -36,7 +36,7 @@ const WelcomePage = () => {
 
   const getName = user?.student_name.split(" ")
   return (
-    <div className="flex min-h-[90svh] lg:min-h-[85svh] flex-col justify-between pb-4 md:pb-0">
+    <div className="flex min-h-[90dvh] lg:min-h-[85dvh] flex-col justify-between pb-4 md:pb-0">
       <div
         className={`w-full transition-all duration-1000 ease-in-out  lg:w-3/4 flex flex-col m-auto py-6 items-center pt-8 sm:pt-14 md:pt-0 ${
           animate
