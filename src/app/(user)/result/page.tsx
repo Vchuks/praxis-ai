@@ -367,12 +367,19 @@ const ConversationEntry = ({
         )}
 
         {entry.format === "article" &&
-          isResponseItemArray(entry.answer.data) && (
+          isResponseItemArray(entry.answer.data) ? (
             <ArticleContent
               items={entry.answer.data}
               question={entry.question}
             />
-          )}
+          ) : (isContentData(entry.answer.data) ||
+            typeof entry.answer.data === "object") && (
+            <GeneralContent
+              data={entry.answer.data as ContentData | string}
+              topicName={topicName}
+            />
+          )
+        }
 
         {entry.format === "quiz" && <QuizContent userAnswer={entry.answer} />}
 

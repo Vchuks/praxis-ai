@@ -4,7 +4,14 @@ import article from "../../public/assets/books.png";
 import ask from "../../public/assets/quiz.png";
 import dots from "../../public/assets/dots.png";
 import faq from "../../public/assets/faq.png";
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { Tooltip } from "react-tooltip";
 import { useCourseStore, useResultStore, useSmallNavStore } from "@/stores";
@@ -79,35 +86,49 @@ const UserCourse = () => {
   const [openSmall2, setOpenSmall2] = useState<string | null>(null);
 
   const router = useRouter();
-  const dotsRef = useRef<HTMLDivElement>(null)
-  const dotsRef2 = useRef<HTMLDivElement>(null)
+  const dotsRef = useRef<HTMLDivElement>(null);
+  const dotsRef2 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dotsRef.current && !dotsRef.current.contains(event.target as Node)) {
-        setOpenSmall(null);
-      }
-    };
-    const handleClickOutside2 = (event: MouseEvent) => {
-      if (dotsRef2.current && !dotsRef2.current.contains(event.target as Node)) {
-        setOpenSmall2(null);
-      }
-    };
-
-    // Only add listener when dropdown is open
-    if (openSmall) {
-      document.addEventListener('mousedown', handleClickOutside);
+  const handleClickOutside = (event: MouseEvent) => {
+    const target = event.target as Node;
+    
+    // Check if the click is outside both the dots button AND the dropdown
+    if (
+      dotsRef.current && 
+      !dotsRef.current.contains(target) &&
+      // Also check if the click is not on the dropdown itself
+      !document.querySelector(`[data-dropdown-id="${openSmall}"]`)?.contains(target)
+    ) {
+      setOpenSmall(null);
     }
-    if (openSmall2) {
-      document.addEventListener('mousedown', handleClickOutside2);
+  };
+
+  const handleClickOutside2 = (event: MouseEvent) => {
+    const target = event.target as Node;
+    
+    if (
+      dotsRef2.current && 
+      !dotsRef2.current.contains(target) &&
+      !document.querySelector(`[data-dropdown-id="${openSmall2}"]`)?.contains(target)
+    ) {
+      setOpenSmall2(null);
     }
+  };
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('mousedown', handleClickOutside2);
-    };
-  }, [openSmall, openSmall2]);
+  // Use 'click' instead of 'mousedown' for better timing
+  if (openSmall) {
+    document.addEventListener("click", handleClickOutside);
+  }
+  if (openSmall2) {
+    document.addEventListener("click", handleClickOutside2);
+  }
 
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+    document.removeEventListener("click", handleClickOutside2);
+  };
+}, [openSmall, openSmall2]);
 
   useMemo(() => {
     setCourseDropdown(userCourses[0]?.course_code);
@@ -193,7 +214,7 @@ const UserCourse = () => {
         setOpenSmall(null);
       }
     },
-    [setUserQuestion, router, setShowNav,showNav, sandID]
+    [setUserQuestion, router, setShowNav, showNav, sandID]
   );
 
   const handleTools = (id: string) => {
@@ -279,11 +300,11 @@ const UserCourse = () => {
                           />
                         </div>
                         <div
-                          className={`transition-all duration-500 ease-out overflow-hidden
+                          className={`transition-all duration-500 ease-out 
                               ${
                                 subTopicDropdown === topics.id
-                                  ? "max-h-[400px] opacity-100"
-                                  : "max-h-0 opacity-0"
+                                  ? " opacity-100"
+                                  : "opacity-0"
                               }
                                    `}
                         >
@@ -291,7 +312,7 @@ const UserCourse = () => {
                             topics?.sub_topic?.map((subT: SubTopicType) => (
                               <div
                                 key={`subtopic-${subT.id}`}
-                                className={` ml-2 px-2 py-2 font-light shadow-sm rounded-lg flex items-start mb-4 bg-white ${
+                                className={` ml-2 px-2 py-2 font-light shadow-sm rounded-lg flex items-start mb-4 bg-white  ${
                                   subT.id === subTID
                                     ? "opacity-100"
                                     : subTID === null
@@ -315,7 +336,10 @@ const UserCourse = () => {
                                 >
                                   {subT.name}
                                 </p>
-                                <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end" ref={dotsRef}>
+                                <div
+                                  className=" flex items-baseline gap-3 md:gap-2 w-20  justify-end"
+                                  ref={dotsRef}
+                                >
                                   {tooltipData.map((tooltip) => {
                                     const actionId = `${subT.id}-${tooltip.id}`;
                                     const isLoading =
@@ -365,7 +389,7 @@ const UserCourse = () => {
                                         {/* dots to reveal other icons */}
                                         {openSmall === subT.id && (
                                           <div
-                                            className={`w-fit absolute left-32 bg-white z-20 py-2 px-4 flex flex-col gap-2 
+                                            className={`w-fit absolute right-4 bg-white z-20 py-2 px-4 flex flex-col gap-2 
                           shadow-2xl shadow-[#0000001A] rounded-l-2xl rounded-ee-2xl
                           transition-all duration-300 ease-out transform-gpu
                           ${
@@ -507,7 +531,10 @@ const UserCourse = () => {
                           <p className="text-sm w-full truncate font-medium text-gray-600">
                             {topics.name}
                           </p>
-                          <div className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end" ref={dotsRef2}>
+                          <div
+                            className=" flex items-baseline gap-3 md:gap-2 w-20 justify-end"
+                            ref={dotsRef2}
+                          >
                             {tooltipData.map((tooltip) => {
                               const actionId = `${topics.id}-${tooltip.id}`;
                               const isLoading = loadingAction === actionId;
@@ -556,7 +583,7 @@ const UserCourse = () => {
                                   {/* dots to reveal other icons */}
                                   {openSmall2 === topics.id && (
                                     <div
-                                      className={`w-fit absolute left-32 bg-white z-20 py-2 px-4 flex flex-col gap-2 
+                                      className={`w-fit absolute right-4 bg-white z-20 py-2 px-4 flex flex-col gap-2 
                           shadow-2xl shadow-[#0000001A] rounded-l-2xl rounded-ee-2xl
                           transition-all duration-300 ease-out transform-gpu
                           ${

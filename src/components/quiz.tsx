@@ -1,9 +1,9 @@
-// import { useResultStore } from "@/stores";
+
 import { CheckIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import CircularScoreProgress from "./scoreProgress";
-import Link from "next/link";
 import { ResponseItem } from "@/app/(user)/result/page";
+import { useResultStore, useSmallNavStore } from "@/stores";
 
 export type QuizDataObject = {
   question_text: string;
@@ -49,6 +49,9 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
     
   const [pageNum, setPageNum] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
+  const {setUserQuestion} = useResultStore()
+  const {setShowNav} = useSmallNavStore()
+  const router = useRouter()
 
   type AnswerStatus = {
     [key: string]: "correct" | "incorrect";
@@ -59,6 +62,35 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
     new Set()
   );
   const [failedQst, setFailedQst] = useState<FailedType[]>([]);
+
+  
+  const getSolution = useCallback(
+    async (topicName: string, isSearch: boolean) => {
+
+      try {
+        if (topicName === "") {
+          return;
+        }
+        const questionData = {
+          topicName: topicName,
+          course_topic: `${topicName}`,
+          format: "",
+        };
+
+        // Set the user question and wait for completion
+        await setUserQuestion(questionData, isSearch);
+
+        setShowNav(false);
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(
+            `Something went wrong. Please try again. ${error.message}`
+          );
+        }
+      }
+    },
+    [setUserQuestion, router, setShowNav]
+  );
 
   const handleAnswer = useCallback(
     (
@@ -364,10 +396,10 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
                   </p>
                   <div className="bg-gradient-to-r w-36 md:w-44 from-[#222057] to-[#F8991D] p-[2px] rounded-[30px]">
                     <div className="bg-white w-full text-center h-7 md:h-9 flex justify-center items-center rounded-[30px] gap-5">
-                      <Link href={`${each.link}`} target="_blank"><p className="bg-clip-text text-transparent bg-gradient-to-r from-[#222057] to-[#F8991D] font-semibold text-xs md:text-sm ">
+                      <p className="bg-clip-text text-transparent bg-gradient-to-r from-[#222057] to-[#F8991D] font-semibold text-xs md:text-sm " onClick={() => getSolution(each.question, true)}>
                         Study More
                       </p>
-                      </Link>
+                      
                     </div>
                   </div>
                 </div>
