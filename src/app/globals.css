@@ -72,8 +72,10 @@ pre {
   height: inherit;
 }
 
-input, select, textarea {
-  font-size: 14px; /* iOS zooms if font-size < 16px */
+input {
+  font-size: 16px; /* Prevents zoom */
+  transform: scale(0.875); /* 14/16 = 0.875, makes it look like 14px */
+  transform-origin: left center;
 }
 
 
