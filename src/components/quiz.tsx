@@ -51,7 +51,6 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
   const [score, setScore] = useState<number>(0);
   const {setUserQuestion} = useResultStore()
   const {setShowNav} = useSmallNavStore()
-  const router = useRouter()
 
   type AnswerStatus = {
     [key: string]: "correct" | "incorrect";
@@ -89,7 +88,7 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
         }
       }
     },
-    [setUserQuestion, router, setShowNav]
+    [setUserQuestion, setShowNav]
   );
 
   const handleAnswer = useCallback(
