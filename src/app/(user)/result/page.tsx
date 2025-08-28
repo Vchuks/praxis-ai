@@ -157,7 +157,7 @@ const renderFaqContent = (
         <Fragment key={`faq-${index}-${each.question}`}>
           <div>
             <p
-              className="font-semibold text-lg p-4 shadow-sm cursor-pointer hover:bg-gray-50"
+              className="font-semibold text-base md:text-lg p-3 md:p-4 shadow-sm cursor-pointer hover:bg-gray-50"
               onClick={() => handleFaqDropdown(each.answer)}
             >
               {each.question}
@@ -165,7 +165,7 @@ const renderFaqContent = (
           </div>
           {subTID === each.answer && (
             <div className="shadow-md rounded-b-md">
-              <p className="px-4 py-6 w-full lg:w-[45rem] leading-relaxed text-base mb-3">
+              <p className="px-3 py-4 md:px-4 md:py-6 w-full lg:w-[45rem] leading-relaxed text-sm md:text-base mb-3">
                 {each.answer}
               </p>
             </div>

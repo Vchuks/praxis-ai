@@ -179,7 +179,7 @@ const SearchBox = () => {
             <Image
               src={chat}
               alt=""
-              className="w-4 md:w-6 items-start"
+              className="w-5 md:w-6 items-start"
               onClick={() => {
                 handleAnswer(search, true);
               }}

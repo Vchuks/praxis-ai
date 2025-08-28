@@ -72,6 +72,9 @@ pre {
   height: inherit;
 }
 
+input, select, textarea {
+  font-size: 14px; /* iOS zooms if font-size < 16px */
+}
 
 
 
