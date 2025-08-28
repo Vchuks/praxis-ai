@@ -68,7 +68,7 @@ const SearchBox = () => {
           value={search}
           placeholder="Chat with Praxis"
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full text-sm md:pt-1 outline-0 bg-white"
+          className="w-full md:pt-1 outline-0 bg-white"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
