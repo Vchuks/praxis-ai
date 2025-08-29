@@ -240,7 +240,7 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
         )}
         {pageNum !== 10 ? (
           <p className="text-base md:text-[20px]">
-            Below are {quizArray.length} questions on {quizData.topic}:
+            Below are {quizArray.length} questions:
             
           </p>
         ) : (

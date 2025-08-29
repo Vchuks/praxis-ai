@@ -262,7 +262,7 @@ const UserCourse = () => {
             </div>
             <div
               className={`
-  transition-all duration-500 ease-out overflow-hidden
+  transition-all duration-500 ease-out overflow-y-scroll no-scrollbar
   ${
     courseDropdown === each.course_code
       ? "max-h-[800px] opacity-100"
@@ -272,9 +272,9 @@ const UserCourse = () => {
             >
               {courseDropdown === each.course_code && (
                 <div className="relative px-4 rounded-b-lg pb-4 overflow-y-auto no-scrollbar">
-                  {each?.course_topics?.map((topics: TopicType) => {
+                  {each?.course_topics?.map((topics: TopicType, idx) => {
                     return (
-                      <Fragment key={`topic-${topics.id}`}>
+                      <Fragment key={`topics-${idx}`}>
                         <div
                           className={`flex items-center w-full justify-between py-3 cursor-pointer hover:bg-gray-50 rounded transition-colors duration-200
                           
@@ -303,15 +303,15 @@ const UserCourse = () => {
                           className={`transition-all duration-500 ease-out 
                               ${
                                 subTopicDropdown === topics.id
-                                  ? " opacity-100"
+                                  ? "py-2 opacity-100"
                                   : "opacity-0"
                               }
                                    `}
                         >
                           {subTopicDropdown === topics.id &&
-                            topics?.sub_topic?.map((subT: SubTopicType) => (
+                            topics?.sub_topic?.map((subT: SubTopicType, ind) => (
                               <div
-                                key={`subtopic-${subT.id}`}
+                                key={`subtopics-${subT.id}-${ind}`}
                                 className={` ml-2 px-2 py-2 font-light shadow-sm rounded-lg flex items-start mb-4 bg-white  ${
                                   subT.id === subTID
                                     ? "opacity-100"

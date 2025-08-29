@@ -131,7 +131,7 @@ const QuizContent = ({ userAnswer }: { userAnswer: UserAnswer }) => {
   };
 
   return (
-    <div className="py-4 w-full lg:w-[45rem] px-2 md:px-4 mt-4">
+    <div className="py-4 w-full lg:w-[45rem]  md:px-4 mt-4">
       <Quiz quizData={quizData} />
     </div>
   );
@@ -201,7 +201,7 @@ const VideoContent = ({
   items: ResponseItem[];
   topicName: string;
 }) => (
-  <div className="py-4 w-full lg:w-[45rem] px-2 md:px-4 mt-4">
+  <div className="py-4 w-full lg:w-[45rem] md:px-4 mt-4">
     <div className="bg-white p-4 rounded-t-xl mb-2">
       <h2 className="text-xl font-semibold">{topicName}</h2>
     </div>
@@ -338,6 +338,8 @@ const ConversationEntry = ({
     },
     [subTID]
   );
+
+  
   return (
     <div className={`conversation-entry ${isLatest ? "mb-2" : "mb-12"}`}>
       {/* Question Display */}
@@ -367,7 +369,7 @@ const ConversationEntry = ({
         )}
 
         {entry.format === "article" &&
-          isResponseItemArray(entry.answer.data) ? (
+          (isResponseItemArray(entry.answer.data) ? (
             <ArticleContent
               items={entry.answer.data}
               question={entry.question}
@@ -378,7 +380,7 @@ const ConversationEntry = ({
               data={entry.answer.data as ContentData | string}
               topicName={topicName}
             />
-          )
+          ))
         }
 
         {entry.format === "quiz" && <QuizContent userAnswer={entry.answer} />}
