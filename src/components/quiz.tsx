@@ -393,7 +393,7 @@ const Quiz: React.FC<QuizDataType> = ({ quizData }) => {
                   <p className="w-full">
                     You tried, would you like to study more on the topic?
                   </p>
-                  <div className="bg-gradient-to-r w-36 md:w-44 from-[#222057] to-[#F8991D] p-[2px] rounded-[30px]">
+                  <div className="bg-gradient-to-r hover:shadow-lg w-36 md:w-44 from-[#222057] to-[#F8991D] p-[2px] rounded-[30px] cursor-pointer">
                     <div className="bg-white w-full text-center h-7 md:h-9 flex justify-center items-center rounded-[30px] gap-5">
                       <p className="bg-clip-text text-transparent bg-gradient-to-r from-[#222057] to-[#F8991D] font-semibold text-xs md:text-sm " onClick={() => getSolution(each.question, true)}>
                         Study More

@@ -196,7 +196,7 @@ const UserCourse = () => {
           format: format,
         };
 
-        const getD = format === "article" ? true : false;
+        const getD = format === "" ? true : false;
         // Set the user question and wait for completion
         await setUserQuestion(questionData, getD);
 
